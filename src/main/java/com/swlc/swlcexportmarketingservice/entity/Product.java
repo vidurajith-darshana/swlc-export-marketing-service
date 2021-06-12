@@ -38,6 +38,9 @@ public class Product {
     @CreatedDate
     private Date createDate = new Date();
 
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<OrderItem> orderItems = new ArrayList<>();
+
     public Product(int productId) {
         this.productId = productId;
     }
