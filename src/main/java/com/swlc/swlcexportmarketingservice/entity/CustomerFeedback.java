@@ -8,31 +8,27 @@ import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "ORDERS")
-public class Order {
+@Table(name = "CUSTOMER_FEEDBACK")
+public class CustomerFeedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "FK_USER")
-    private User fkUser;
-
-    @NotNull
-    @Column(name = "TOTAL")
-    private Double total;
-
     @NotNull
     @Column(name = "MESSAGE")
     private String message;
 
-    @NotNull
-    @Column(name = "STATUS")
-    private String status;
+    @ManyToOne
+    @JoinColumn(name = "FK_USER")
+    private User fkUser;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @ManyToOne
+    @JoinColumn(name = "FK_PRODUCT")
+    private Product fkProduct;
+
     @Column(name = "CREATE_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createDate = new Date();
 }

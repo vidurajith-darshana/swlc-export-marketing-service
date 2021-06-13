@@ -4,41 +4,50 @@ import lombok.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
+@Table(name = "USER")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "ID")
+    private Integer id;
+
     @NotNull
+    @Column(name = "FIRST_NAME")
     private String firstName;
+
     @NotNull
+    @Column(name = "LAST_NAME")
     private String lastName;
+
     @NotNull
+    @Column(name = "EMAIL")
     private String email;
+
     @NotNull
+    @Column(name = "PASSWORD")
     private String password;
+
     @NotNull
+    @Column(name = "ROLE")
     private String role;
-    @NotNull
-    private String language;
+
+    @Column(name = "PREFERRED_LANGUAGE")
+    private String preferredLanguage;
+
+    @Column(name = "VERIFY_CODE")
     private String verifyCode;
-    @Column(name="create_date")
+
+    @Column(name = "CREATE_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate = new Date();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Order> orders = new ArrayList<>();
+    @OneToMany(mappedBy = "fkUser",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Order> fkOrders;
 
-    public User(int id) {
-        this.id = id;
-    }
 }

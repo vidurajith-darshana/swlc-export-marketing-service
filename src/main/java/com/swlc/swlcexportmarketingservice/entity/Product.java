@@ -2,46 +2,57 @@ package com.swlc.swlcexportmarketingservice.entity;
 
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
+@Table(name = "PRODUCT")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int productId;
+    @Column(name = "ID")
+    private Integer id;
+
     @NotNull
-    private String productName;
+    @Column(name = "CODE")
+    private String code;
+
     @NotNull
-    private String productCode;
+    @Column(name = "NAME")
+    private String name;
+
     @NotNull
-    private String productThumbnail;
+    @Column(name = "THUMBNAIL")
+    private String thumbnail;
+
     @NotNull
-    private Double productPrice;
+    @Column(name = "PRICE")
+    private Double price;
+
     @NotNull
-    private String productStatus;
+    @Column(name = "STATUS")
+    private String status;
+
     @NotNull
-    private int productTotalQty;
+    @Column(name = "TOTAL_QTY")
+    private Integer totalQty;
+
     @NotNull
-    private int productCurrentQty;
-    @Column(name="create_date",insertable = false,updatable = false)
+    @Column(name = "CURRENT_QTY")
+    private Integer currentQty;
+
+    @Column(name="CREATE_DATE")
     @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
     private Date createDate = new Date();
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<OrderItem> orderItems = new ArrayList<>();
+    @OneToMany(mappedBy = "fkProduct",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<OrderDetail> fkOrderDetails;
 
-    public Product(int productId) {
-        this.productId = productId;
-    }
+    @OneToMany(mappedBy = "fkCategory",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<ProductCategory> fkProductCategories;
+
 }
