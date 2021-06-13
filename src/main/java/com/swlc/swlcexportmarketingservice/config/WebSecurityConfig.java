@@ -1,5 +1,6 @@
 package com.swlc.swlcexportmarketingservice.config;
 
+import com.swlc.swlcexportmarketingservice.constant.ApplicationConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .anonymous().disable()
                 .authorizeRequests()
+                .antMatchers("/api/v1/user/customer/create").permitAll()
                 .antMatchers("/api-docs/**").permitAll();
     }
 

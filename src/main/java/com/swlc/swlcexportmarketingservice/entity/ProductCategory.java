@@ -1,15 +1,14 @@
 package com.swlc.swlcexportmarketingservice.entity;
 
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "ORDERS")
-public class Order {
+@Table(name = "PRODUCT_CATEGORY")
+public class ProductCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,20 +16,12 @@ public class Order {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "FK_USER")
-    private User fkUser;
+    @JoinColumn(name = "FK_PRODUCT")
+    private Product fkProduct;
 
-    @NotNull
-    @Column(name = "TOTAL")
-    private Double total;
-
-    @NotNull
-    @Column(name = "MESSAGE")
-    private String message;
-
-    @NotNull
-    @Column(name = "STATUS")
-    private String status;
+    @ManyToOne
+    @JoinColumn(name = "FK_CATEGORY")
+    private Category fkCategory;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_DATE")
