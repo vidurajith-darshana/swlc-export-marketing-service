@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
 @Data
 @Table(name = "PRODUCT")
 public class Product {
