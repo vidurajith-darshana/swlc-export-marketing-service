@@ -1,5 +1,6 @@
 package com.swlc.swlcexportmarketingservice.dto.common;
 
+import com.swlc.swlcexportmarketingservice.dto.OrderDetailDto;
 import com.swlc.swlcexportmarketingservice.entity.OrderDetail;
 import lombok.Data;
 
@@ -12,5 +13,5 @@ public class CommonOrderDTO {
     private double total;
     private String message;
     private String status;
-    private List<OrderDetail> orderDetails;
+    private List<OrderDetailDto> orderDetails;
 }

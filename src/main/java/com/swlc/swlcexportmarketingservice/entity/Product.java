@@ -55,4 +55,10 @@ public class Product {
     @OneToMany(mappedBy = "fkCategory",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<ProductCategory> fkProductCategories;
 
+    public Product() {
+    }
+
+    public Product(Integer id) {
+        this.id = id;
+    }
 }

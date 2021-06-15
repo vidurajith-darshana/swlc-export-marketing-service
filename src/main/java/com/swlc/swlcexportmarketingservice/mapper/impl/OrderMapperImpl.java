@@ -18,6 +18,12 @@ public class OrderMapperImpl implements OrderMapper {
         if (orderDto == null){
             return null;
         }
-        return null;
+        return new Order(
+                orderDto.getId(),
+                new User(orderDto.getFkUserId()),
+                orderDto.getTotal(),
+                orderDto.getMessage(),
+                orderDto.getStatus()
+        );
     }
 }

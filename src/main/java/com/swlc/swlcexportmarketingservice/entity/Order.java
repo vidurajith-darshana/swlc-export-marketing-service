@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -35,4 +36,21 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_DATE")
     private Date createDate = new Date();
+
+    @OneToMany(mappedBy = "fkOrder",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Order> fkOrder;
+
+    public Order() {}
+
+    public Order(Integer id) {
+        this.id = id;
+    }
+
+    public Order(Integer id, User fkUser, @NotNull Double total, @NotNull String message, @NotNull String status) {
+        this.id = id;
+        this.fkUser = fkUser;
+        this.total = total;
+        this.message = message;
+        this.status = status;
+    }
 }
