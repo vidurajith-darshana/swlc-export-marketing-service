@@ -7,6 +7,8 @@ import com.swlc.swlcexportmarketingservice.repository.CategoryRepository;
 import com.swlc.swlcexportmarketingservice.service.CategoryService;
 import com.swlc.swlcexportmarketingservice.util.FileHandler;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import static com.swlc.swlcexportmarketingservice.constant.ApplicationConstant.NOT_FOUND_CATEGORY;
@@ -30,7 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
 
         if (categoryDTO == null) {
-            throw new SwlcExportMarketException(500, NOT_FOUND_CATEGORY);
+            throw new SwlcExportMarketException(404, NOT_FOUND_CATEGORY);
         }
 
         String thumbnail = fileHandler.saveImageFile(categoryDTO.getThumbnail());
@@ -43,5 +45,14 @@ public class CategoryServiceImpl implements CategoryService {
 
         return modelMapper.map(category, CategoryDTO.class);
 
+    }
+
+    @Override
+    public Page<CategoryDTO> getAllCategory(Pageable pageable) {
+        return categoryRepository.getAllCategories(pageable).map(this::getCategoryDTO);
+    }
+
+    private CategoryDTO getCategoryDTO(Category category){
+        return modelMapper.map(category,CategoryDTO.class);
     }
 }
