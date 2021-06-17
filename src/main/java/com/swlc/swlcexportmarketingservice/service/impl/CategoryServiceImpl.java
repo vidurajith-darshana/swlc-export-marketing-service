@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static com.swlc.swlcexportmarketingservice.constant.ApplicationConstant.NOT_FOUND_CATEGORY;
 
 @Service
@@ -52,7 +54,35 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.getAllCategories(pageable).map(this::getCategoryDTO);
     }
 
-    private CategoryDTO getCategoryDTO(Category category){
+    @Override
+    public CategoryDTO updateCategory(CategoryDTO categoryDTO) {
+
+        if (categoryDTO == null) {
+            throw new SwlcExportMarketException(404, NOT_FOUND_CATEGORY);
+        }
+
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryDTO.getId());
+
+        if (!optionalCategory.isPresent()) {
+            throw new SwlcExportMarketException(404, NOT_FOUND_CATEGORY);
+        }
+
+        Category category = optionalCategory.get();
+
+        category.setName(categoryDTO.getName());
+
+        if (categoryDTO.getThumbnail() != null) {
+            String thumbnail = fileHandler.saveImageFile(categoryDTO.getThumbnail());
+
+            category.setThumbnail(thumbnail);
+        }
+
+        category = categoryRepository.save(category);
+
         return modelMapper.map(category,CategoryDTO.class);
+    }
+
+    private CategoryDTO getCategoryDTO(Category category) {
+        return modelMapper.map(category, CategoryDTO.class);
     }
 }

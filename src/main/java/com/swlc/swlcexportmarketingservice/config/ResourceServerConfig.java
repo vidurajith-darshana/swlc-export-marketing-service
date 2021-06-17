@@ -21,8 +21,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-//                .antMatchers("/api/v1/admin/**").access("hasAuthority('ROLE_ADMIN')")
-                .antMatchers("/api/v1/user/**").access("hasAuthority('ROLE_CUSTOMER')")
+//                .antMatchers("/api/v1/admin/**").access("hasAuthority('ROLE_ADMINISTRATOR')")
+                .antMatchers("/api/v1/user/**").access("hasAuthority('ROLE_USER')")
                 .antMatchers("/**").permitAll()
                 .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
         http.csrf().disable();

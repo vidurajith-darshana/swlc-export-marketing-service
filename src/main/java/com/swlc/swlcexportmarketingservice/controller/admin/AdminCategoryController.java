@@ -44,4 +44,14 @@ public class AdminCategoryController {
         return ResponseEntity.ok(new CommonResponseDTO(true, allCategory));
 
     }
+
+    @PutMapping("/category")
+    public ResponseEntity<CommonResponseDTO> updateCategory(@RequestBody CategoryDTO categoryDTO, HttpServletRequest httpServletRequest) {
+
+        log.info("End point: " + httpServletRequest.getPathInfo());
+
+        categoryDTO = categoryService.updateCategory(categoryDTO);
+
+        return ResponseEntity.ok(new CommonResponseDTO(true, categoryDTO));
+    }
 }
