@@ -47,8 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .anonymous().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/user/admin/hello").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_ADMIN.toString())
-                .antMatchers("/api/v1/user/customer/create").permitAll();
+                .antMatchers("/api-docs/**").permitAll();
     }
 
     @Bean

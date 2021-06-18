@@ -1,5 +1,6 @@
 package com.swlc.swlcexportmarketingservice.config;
 
+import com.swlc.swlcexportmarketingservice.constant.ApplicationConstant;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -20,6 +21,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/v1/user/admin/hello").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_ADMIN.toString())
+                .antMatchers("/v1/user/customer/create").permitAll()
                 .antMatchers("/v1/test").hasRole("ADMIN")
                 .antMatchers("/**").permitAll()
                 .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
