@@ -10,4 +10,9 @@ public class CommonResponseDTO {
     private boolean success;
     private String message;
     private Object body;
+
+    public CommonResponseDTO(boolean success, Object body) {
+        this.success = success;
+        this.body = body;
+    }
 }

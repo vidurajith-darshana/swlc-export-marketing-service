@@ -1,4 +1,4 @@
-package com.swlc.swlcexportmarketingservice.controller;
+package com.swlc.swlcexportmarketingservice.controller.user;
 
 import com.swlc.swlcexportmarketingservice.constant.ApplicationConstant;
 import com.swlc.swlcexportmarketingservice.dto.UserDto;
