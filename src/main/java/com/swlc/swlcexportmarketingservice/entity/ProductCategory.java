@@ -1,11 +1,13 @@
 package com.swlc.swlcexportmarketingservice.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@NoArgsConstructor
 @Data
 @Table(name = "PRODUCT_CATEGORY")
 public class ProductCategory {

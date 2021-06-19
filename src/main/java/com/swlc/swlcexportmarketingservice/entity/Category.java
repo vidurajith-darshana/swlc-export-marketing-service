@@ -1,6 +1,7 @@
 package com.swlc.swlcexportmarketingservice.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
 @Data
 @Table(name = "CATEGORY")
 public class Category {

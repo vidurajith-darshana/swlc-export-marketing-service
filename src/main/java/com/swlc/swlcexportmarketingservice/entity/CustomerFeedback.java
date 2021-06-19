@@ -1,12 +1,14 @@
 package com.swlc.swlcexportmarketingservice.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@NoArgsConstructor
 @Data
 @Table(name = "CUSTOMER_FEEDBACK")
 public class CustomerFeedback {
