@@ -35,9 +35,4 @@ public class UserController {
             return new ResponseEntity<>(new CommonResponseDTO(false, APPLICATION_ERROR_OCCURRED_MESSAGE, "This API valid only to create operators!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping("/admin/hello")
-    public String adminApi() {
-        return "Hello Admin";
-    }
 }
