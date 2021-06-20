@@ -5,6 +5,8 @@ public class ApplicationConstant {
     public static final String APPLICATION_ERROR_OCCURRED_MESSAGE = "Something went wrong. Please, try again.";
     public static final String INVALID_LOGIN_CREDENTIALS = "Invalid login credentials.";
     public static final String NOT_FOUND_CATEGORY = "Category not found!";
+    public static final String NOT_FOUND_PRODUCT = "Product not found!";
+    public static final String NOT_FOUND_THUMBNAIL = "Thumbnail not found!";
 
     //Success Messages
     public static final String REQUEST_SUCCESS_MESSAGE = "Your request was success.";

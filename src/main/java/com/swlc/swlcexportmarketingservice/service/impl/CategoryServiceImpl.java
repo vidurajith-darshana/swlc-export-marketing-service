@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 import static com.swlc.swlcexportmarketingservice.constant.ApplicationConstant.NOT_FOUND_CATEGORY;
+import static com.swlc.swlcexportmarketingservice.constant.ApplicationConstant.NOT_FOUND_THUMBNAIL;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -35,6 +36,10 @@ public class CategoryServiceImpl implements CategoryService {
 
         if (categoryDTO == null) {
             throw new SwlcExportMarketException(404, NOT_FOUND_CATEGORY);
+        }
+
+        if (categoryDTO.getThumbnail() == null){
+            throw new SwlcExportMarketException(404,NOT_FOUND_THUMBNAIL);
         }
 
         String thumbnail = fileHandler.saveImageFile(categoryDTO.getThumbnail());

@@ -1,8 +1,8 @@
 package com.swlc.swlcexportmarketingservice.controller.user;
 
-import com.swlc.swlcexportmarketingservice.dto.CategoryDTO;
+import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
-import com.swlc.swlcexportmarketingservice.service.CategoryService;
+import com.swlc.swlcexportmarketingservice.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,25 +15,26 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/user/category")
-public class UserCategoryController {
+@RequestMapping("/api/v1/user/product")
+public class UserProductController {
 
-    private final CategoryService categoryService;
+    private final ProductService productService;
 
-    public UserCategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
+
+    public UserProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/all")
-    public ResponseEntity<CommonResponseDTO> getAllCategories(Pageable pageable, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<CommonResponseDTO> getAllProducts(Pageable pageable, HttpServletRequest httpServletRequest) {
 
         log.info("End point: " + httpServletRequest.getPathInfo());
 
         log.info("Page : {}",pageable);
 
-        Page<CategoryDTO> allCategory = categoryService.getAllCategory(pageable);
+        Page<ProductDTO> allProducts = productService.getAllProducts(pageable);
 
-        return ResponseEntity.ok(new CommonResponseDTO(true, allCategory));
+        return ResponseEntity.ok(new CommonResponseDTO(true, allProducts));
 
     }
 }

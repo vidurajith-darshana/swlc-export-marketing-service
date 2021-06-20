@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/admin/category")
 public class AdminCategoryController {
 
     private final CategoryService categoryService;
@@ -22,7 +22,7 @@ public class AdminCategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/category/create")
+    @PostMapping("/create")
     public ResponseEntity<CommonResponseDTO> createCategory(@RequestBody CategoryDTO categoryDTO, HttpServletRequest httpServletRequest) {
 
         log.info("End point: " + httpServletRequest.getPathInfo());
@@ -32,7 +32,7 @@ public class AdminCategoryController {
         return ResponseEntity.ok(new CommonResponseDTO(true, categoryDTO));
     }
 
-    @GetMapping("/category/all")
+    @GetMapping("/all")
     public ResponseEntity<CommonResponseDTO> getAllCategories(Pageable pageable, HttpServletRequest httpServletRequest) {
 
         log.info("End point: " + httpServletRequest.getPathInfo());
@@ -45,7 +45,7 @@ public class AdminCategoryController {
 
     }
 
-    @PutMapping("/category")
+    @PutMapping("/update")
     public ResponseEntity<CommonResponseDTO> updateCategory(@RequestBody CategoryDTO categoryDTO, HttpServletRequest httpServletRequest) {
 
         log.info("End point: " + httpServletRequest.getPathInfo());

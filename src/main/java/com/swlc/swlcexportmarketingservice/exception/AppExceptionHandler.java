@@ -29,6 +29,10 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(value = {Exception.class})
     ResponseEntity<ErrorMessageResponseDTO> handleAnyException(Exception ex, WebRequest webRequest) {
+
+        log.error("Exception : " + ex.getMessage());
+
+        ex.printStackTrace();
         return new ResponseEntity<>(
                 new ErrorMessageResponseDTO(false, 100, APPLICATION_ERROR_OCCURRED_MESSAGE), HttpStatus.EXPECTATION_FAILED);
     }
