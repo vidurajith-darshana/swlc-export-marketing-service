@@ -2,6 +2,7 @@ package com.swlc.swlcexportmarketingservice.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
@@ -27,7 +28,7 @@ public class Category {
     @Column(name = "THUMBNAIL")
     private String thumbnail;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     @Column(name = "CREATE_DATE")
     private Date createDate = new Date();
 
