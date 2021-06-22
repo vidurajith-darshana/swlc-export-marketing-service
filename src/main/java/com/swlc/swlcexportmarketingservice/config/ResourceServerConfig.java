@@ -28,11 +28,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/api/v1/admin/product/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
 
                 // Registered User(Customer)
-                .antMatchers("/api/v1/user/customer/create").permitAll()
                 .antMatchers("/api/v1/user/**").access("hasAuthority('ROLE_USER')")
                 .antMatchers("/api/order/**").access("hasAuthority('ROLE_USER')")
 
                 // Any User
+                .antMatchers("/api/v1/user/customer/create").permitAll()
                 .antMatchers("/api/v1/user/category/**").permitAll()
                 .antMatchers("/api/v1/user/product/**").permitAll()
                 .antMatchers("/**").permitAll()
