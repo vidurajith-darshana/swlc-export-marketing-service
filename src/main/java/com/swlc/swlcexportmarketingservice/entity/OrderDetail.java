@@ -42,9 +42,6 @@ public class OrderDetail {
     @JoinColumn(name = "FK_ORDER")
     private Order fkOrder;
 
-    public OrderDetail() {
-    }
-
     public OrderDetail(Integer id, @NotNull Double qty, @NotNull Double price, @NotNull Double subTotal, Product fkProduct, Order fkOrder) {
         this.id = id;
         this.qty = qty;
