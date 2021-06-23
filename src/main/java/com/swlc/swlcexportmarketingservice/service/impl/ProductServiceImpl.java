@@ -5,6 +5,7 @@ import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
 import com.swlc.swlcexportmarketingservice.entity.Category;
 import com.swlc.swlcexportmarketingservice.entity.Product;
 import com.swlc.swlcexportmarketingservice.entity.ProductCategory;
+import com.swlc.swlcexportmarketingservice.enums.CategoryStatus;
 import com.swlc.swlcexportmarketingservice.enums.ProductStatus;
 import com.swlc.swlcexportmarketingservice.exception.SwlcExportMarketException;
 import com.swlc.swlcexportmarketingservice.repository.CategoryRepository;
@@ -43,6 +44,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductDTO> getAllProducts(Pageable pageable) {
+//        return productRepository.getAllProducts(pageable).map(this::getProductDTO);
+        return productRepository.getAllActiveProducts(CategoryStatus.ACTIVE, ProductStatus.ACTIVE, pageable).map(this::getProductDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> getAllProductsByAdmin(Pageable pageable) {
         return productRepository.getAllProducts(pageable).map(this::getProductDTO);
     }
 

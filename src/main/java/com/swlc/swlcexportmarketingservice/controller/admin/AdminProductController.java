@@ -30,7 +30,7 @@ public class AdminProductController {
 
         log.info("Page : {}",pageable);
 
-        Page<ProductDTO> allProducts = productService.getAllProducts(pageable);
+        Page<ProductDTO> allProducts = productService.getAllProductsByAdmin(pageable);
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allProducts));
 

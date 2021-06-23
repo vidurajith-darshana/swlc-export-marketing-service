@@ -12,6 +12,8 @@ public interface CategoryService {
 
     Page<CategoryDTO> getAllCategory(Pageable pageable);
 
+    Page<CategoryDTO> getAllCategoryByAdmin(Pageable pageable);
+
     CategoryDTO updateCategory(CategoryDTO categoryDTO);
 
 }

@@ -11,6 +11,8 @@ public interface ProductService {
 
     Page<ProductDTO> getAllProducts(Pageable pageable);
 
+    Page<ProductDTO> getAllProductsByAdmin(Pageable pageable);
+
     ProductDTO saveProduct(ProductDTO productDTO);
 
     ProductDTO updateProduct(ProductDTO productDTO);
