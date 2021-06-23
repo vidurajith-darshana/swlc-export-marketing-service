@@ -39,7 +39,7 @@ public class AdminCategoryController {
 
         log.info("Page : {}",pageable);
 
-        Page<CategoryDTO> allCategory = categoryService.getAllCategory(pageable);
+        Page<CategoryDTO> allCategory = categoryService.getAllCategoryByAdmin(pageable);
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allCategory));
 
