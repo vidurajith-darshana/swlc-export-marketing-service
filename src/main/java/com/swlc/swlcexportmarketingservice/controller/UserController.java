@@ -1,6 +1,8 @@
 package com.swlc.swlcexportmarketingservice.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.swlc.swlcexportmarketingservice.constant.ApplicationConstant;
+import com.swlc.swlcexportmarketingservice.dto.DeliveryDto;
 import com.swlc.swlcexportmarketingservice.dto.UserDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.service.Oauth2UserService;
@@ -35,4 +37,47 @@ public class UserController {
             return new ResponseEntity<>(new CommonResponseDTO(false, APPLICATION_ERROR_OCCURRED_MESSAGE, "This API valid only to create operators!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/getDetails/{email:.+}")
+    public ResponseEntity<CommonResponseDTO> getUser(@PathVariable("email") String email) {
+        return oauth2UserService.getUser(email);
+    }
+
+    @PostMapping("/customer/save/delivery-details")
+    public ResponseEntity<CommonResponseDTO> saveDeliveryDetails(@RequestBody DeliveryDto deliveryDto) {
+        return oauth2UserService.saveDeliveryDetails(deliveryDto);
+    }
+
+    @PostMapping("/customer/update")
+    public ResponseEntity<CommonResponseDTO> updateCustomer(@RequestBody UserDto userDto) {
+        if (userDto.getRole().equals(ApplicationConstant.USER_ROLES.ROLE_CUSTOMER.toString())) {
+            return oauth2UserService.updateUser(userDto);
+        } else {
+            return new ResponseEntity<>(new CommonResponseDTO(false, APPLICATION_ERROR_OCCURRED_MESSAGE, "This API valid only to update customers!"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/operator/update")
+    public ResponseEntity<CommonResponseDTO> updateOperator(@RequestBody UserDto userDto) {
+        if (userDto.getRole().equals(ApplicationConstant.USER_ROLES.ROLE_OPERATOR.toString())) {
+            return oauth2UserService.updateUser(userDto);
+        } else {
+            return new ResponseEntity<>(new CommonResponseDTO(false, APPLICATION_ERROR_OCCURRED_MESSAGE, "This API valid only to update operators!"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/customer/forget-password/{email:.+}")
+    public ResponseEntity<CommonResponseDTO> forgetPassword(@PathVariable("email") String email) {
+        return oauth2UserService.forgetPassword(email);
+    }
+
+    @PostMapping("/customer/reset-password")
+    public ResponseEntity<CommonResponseDTO> resetPassword(@RequestBody JsonNode jsonNode) {
+        String email = jsonNode.get("email").asText();
+        String verifyCode = jsonNode.get("verifyCode").asText();
+        String password = jsonNode.get("password").asText();
+
+        return oauth2UserService.resetPassword(email,verifyCode,password);
+    }
+
 }
