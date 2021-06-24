@@ -42,8 +42,6 @@ public class Order {
     @OneToMany(mappedBy = "fkOrder",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<OrderDetail> fkOrder;
 
-    public Order() {}
-
     public Order(Integer id) {
         this.id = id;
     }
