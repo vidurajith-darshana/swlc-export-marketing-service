@@ -10,7 +10,17 @@ import org.springframework.stereotype.Service;
 public class OrderMapperImpl implements OrderMapper {
     @Override
     public OrderDto convertOrderToOrderDto(Order order) {
-        return null;
+        if (order == null){
+            return null;
+        }
+
+        return new OrderDto(
+                order.getId().intValue(),
+                order.getFkUser().getId().intValue(),
+                order.getTotal().doubleValue(),
+                order.getMessage(),
+                order.getStatus()
+        );
     }
 
     @Override

@@ -14,4 +14,13 @@ public class CommonOrderDTO {
     private String message;
     private String status;
     private List<OrderDetailDto> orderDetails;
+
+    public CommonOrderDTO(int id, int fkUserId, double total, String message, String status, List<OrderDetailDto> orderDetails) {
+        this.id = id;
+        this.fkUserId = fkUserId;
+        this.total = total;
+        this.message = message;
+        this.status = status;
+        this.orderDetails = orderDetails;
+    }
 }

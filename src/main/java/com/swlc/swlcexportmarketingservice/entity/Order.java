@@ -38,7 +38,7 @@ public class Order {
     private Date createDate = new Date();
 
     @OneToMany(mappedBy = "fkOrder",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Order> fkOrder;
+    private List<OrderDetail> fkOrder;
 
     public Order() {}
 

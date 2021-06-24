@@ -11,12 +11,21 @@ import org.springframework.stereotype.Service;
 public class OrderDetailMapperImpl implements OrderDetailMapper {
     @Override
     public OrderDetailDto convertOrderDetailToOrderDetailDto(OrderDetail orderDetail) {
-        return null;
+        if (orderDetail == null) {
+            return null;
+        }
+
+        return new OrderDetailDto(
+                orderDetail.getQty().doubleValue(),
+                orderDetail.getPrice().doubleValue(),
+                orderDetail.getSubTotal().doubleValue(),
+                orderDetail.getFkProduct().getId().intValue()
+        );
     }
 
     @Override
     public OrderDetail convertOrderDetailDtoToOrderDetail(OrderDetailDto orderDetailDto) {
-        if (orderDetailDto == null){
+        if (orderDetailDto == null) {
             return null;
         }
         return new OrderDetail(

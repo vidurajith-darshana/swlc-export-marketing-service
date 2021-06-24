@@ -6,4 +6,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface OrderService {
     ResponseEntity<CommonResponseDTO> saveOrder(CommonOrderDTO commonOrderDTO);
+
+    ResponseEntity<CommonResponseDTO> getAllOrders();
 }
