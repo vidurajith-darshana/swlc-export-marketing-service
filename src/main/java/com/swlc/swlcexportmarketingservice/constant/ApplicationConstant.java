@@ -8,6 +8,9 @@ public class ApplicationConstant {
     //Success Messages
     public static final String REQUEST_SUCCESS_MESSAGE = "Your request was success.";
 
+    //Email Subjects
+    public static final String FORGOT_PASSWORD_EMAIL_SUBJECT = "CHILLI - Reset Password Request!";
+
     public enum USER_ROLES {
         ROLE_CUSTOMER,ROLE_OPERATOR,ROLE_ADMIN
     }

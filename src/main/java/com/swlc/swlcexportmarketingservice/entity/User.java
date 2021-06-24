@@ -38,9 +38,6 @@ public class User {
     @Column(name = "ROLE")
     private String role;
 
-    @Column(name = "PREFERRED_LANGUAGE")
-    private String preferredLanguage;
-
     @Column(name = "VERIFY_CODE")
     private String verifyCode;
 
