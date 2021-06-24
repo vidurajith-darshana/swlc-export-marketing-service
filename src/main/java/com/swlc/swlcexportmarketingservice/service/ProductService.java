@@ -1,0 +1,21 @@
+package com.swlc.swlcexportmarketingservice.service;
+
+import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
+import com.swlc.swlcexportmarketingservice.enums.ProductStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+@Service
+public interface ProductService {
+
+    Page<ProductDTO> getAllProducts(Pageable pageable);
+
+    ProductDTO saveProduct(ProductDTO productDTO);
+
+    ProductDTO updateProduct(ProductDTO productDTO);
+
+    void updateProductStatus(int productId, ProductStatus productStatus);
+
+    void updateProductCurrentQty(int productId, int currentQty);
+}

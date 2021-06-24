@@ -1,4 +1,4 @@
-package com.swlc.swlcexportmarketingservice.controller;
+package com.swlc.swlcexportmarketingservice.controller.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.swlc.swlcexportmarketingservice.constant.ApplicationConstant;
