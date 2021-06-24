@@ -16,6 +16,7 @@ public class OrderDetailMapperImpl implements OrderDetailMapper {
         }
 
         return new OrderDetailDto(
+                orderDetail.getId().intValue(),
                 orderDetail.getQty().doubleValue(),
                 orderDetail.getPrice().doubleValue(),
                 orderDetail.getSubTotal().doubleValue(),

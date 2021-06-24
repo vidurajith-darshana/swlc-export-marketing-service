@@ -11,7 +11,8 @@ public class OrderDetailDto {
     private double subTotal;
     private int fkProductId;
 
-    public OrderDetailDto(double qty, double price, double subTotal, int fkProductId) {
+    public OrderDetailDto(int id, double qty, double price, double subTotal, int fkProductId) {
+        this.id = id;
         this.qty = qty;
         this.price = price;
         this.subTotal = subTotal;

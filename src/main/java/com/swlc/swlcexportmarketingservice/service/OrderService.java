@@ -8,4 +8,6 @@ public interface OrderService {
     ResponseEntity<CommonResponseDTO> saveOrder(CommonOrderDTO commonOrderDTO);
 
     ResponseEntity<CommonResponseDTO> getAllOrders();
+
+    ResponseEntity<CommonResponseDTO> updateOrder(CommonOrderDTO commonOrderDTO);
 }

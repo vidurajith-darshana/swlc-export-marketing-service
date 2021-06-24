@@ -91,4 +91,24 @@ public class OrderServiceImpl implements OrderService {
             return new ResponseEntity<>(new CommonResponseDTO(false, APPLICATION_ERROR_OCCURRED_MESSAGE, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Override
+    public ResponseEntity<CommonResponseDTO> updateOrder(CommonOrderDTO commonOrderDTO) {
+        try {
+            Order existingOrder = orderRepository.findById(new Integer(commonOrderDTO.getId())).orElse(null);
+            if (existingOrder != null) {
+                existingOrder.setStatus(commonOrderDTO.getStatus());
+                Order order = orderRepository.save(existingOrder);
+                if (order != null) {
+                    return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, "Order updated successfully!"), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(new CommonResponseDTO(false, APPLICATION_ERROR_OCCURRED_MESSAGE, "failed to update order!"), HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            } else {
+                return new ResponseEntity<>(new CommonResponseDTO(false, APPLICATION_ERROR_OCCURRED_MESSAGE, "unable to find order!"), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CommonResponseDTO(false, APPLICATION_ERROR_OCCURRED_MESSAGE, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

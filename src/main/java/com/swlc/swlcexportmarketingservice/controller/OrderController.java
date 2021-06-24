@@ -24,6 +24,8 @@ public class OrderController {
         return orderService.getAllOrders();
     }
 
-
-
+    @PostMapping(value = "/update")
+    public ResponseEntity<CommonResponseDTO> updateOrder(@RequestBody CommonOrderDTO commonOrderDTO){
+        return orderService.updateOrder(commonOrderDTO);
+    }
 }
