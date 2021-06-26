@@ -21,9 +21,6 @@ public class FileHandler {
     @Value("${server.upload.folder}")
     private String folder;
 
-    @Value("${server.folder}")
-    private String serverFolder;
-
     @Value("${server.url}")
     private String baseURL;
 
