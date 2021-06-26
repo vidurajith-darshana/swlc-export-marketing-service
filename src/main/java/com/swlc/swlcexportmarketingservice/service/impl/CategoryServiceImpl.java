@@ -2,6 +2,7 @@ package com.swlc.swlcexportmarketingservice.service.impl;
 
 import com.swlc.swlcexportmarketingservice.dto.CategoryDTO;
 import com.swlc.swlcexportmarketingservice.entity.Category;
+import com.swlc.swlcexportmarketingservice.enums.CategoryStatus;
 import com.swlc.swlcexportmarketingservice.exception.SwlcExportMarketException;
 import com.swlc.swlcexportmarketingservice.repository.CategoryRepository;
 import com.swlc.swlcexportmarketingservice.service.CategoryService;
@@ -48,6 +49,8 @@ public class CategoryServiceImpl implements CategoryService {
 
         category.setThumbnail(thumbnail);
 
+        category.setCategoryStatus(CategoryStatus.ACTIVE);
+
         category = categoryRepository.save(category);
 
         return modelMapper.map(category, CategoryDTO.class);
@@ -56,6 +59,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Page<CategoryDTO> getAllCategory(Pageable pageable) {
+//        return categoryRepository.getAllCategories(pageable).map(this::getCategoryDTO);
+        return categoryRepository.getAllCategoriesByCustomer(pageable).map(this::getCategoryDTO);
+    }
+
+    @Override
+    public Page<CategoryDTO> getAllCategoryByAdmin(Pageable pageable) {
         return categoryRepository.getAllCategories(pageable).map(this::getCategoryDTO);
     }
 
@@ -81,6 +90,8 @@ public class CategoryServiceImpl implements CategoryService {
 
             category.setThumbnail(thumbnail);
         }
+
+        category.setCategoryStatus(categoryDTO.getCategoryStatus());
 
         category = categoryRepository.save(category);
 

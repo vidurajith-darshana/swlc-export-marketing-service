@@ -1,5 +1,6 @@
 package com.swlc.swlcexportmarketingservice.entity;
 
+import com.swlc.swlcexportmarketingservice.enums.CategoryStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -34,4 +35,9 @@ public class Category {
 
     @OneToMany(mappedBy = "fkProduct",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<ProductCategory> fkProductCategories;
+
+    @NotNull
+    @Column(name = "STATUS")
+    @Enumerated(EnumType.STRING)
+    private CategoryStatus categoryStatus;
 }

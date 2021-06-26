@@ -21,6 +21,22 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+
+                // Admin
+                .antMatchers("/api/v1/user/operator/create").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_ADMIN.toString())
+                .antMatchers("/api/v1/admin/category/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
+                .antMatchers("/api/v1/admin/product/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
+
+                // Registered User(Customer)
+                .antMatchers("/api/v1/user/**").access("hasAuthority('ROLE_USER')")
+                .antMatchers("/api/order/**").access("hasAuthority('ROLE_USER')")
+
+                // Any User
+                .antMatchers("/api/v1/user/customer/create").permitAll()
+                .antMatchers("/api/v1/user/category/**").permitAll()
+                .antMatchers("/api/v1/user/product/**").permitAll()
+                .antMatchers("/**").permitAll()
+
                 .antMatchers("/api/v1/user/operator/create").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_ADMIN.toString())
                 .antMatchers("/api/v1/user/customer/save/delivery-details").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_CUSTOMER.toString())
                 .antMatchers("/api/v1/user/customer/update").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_CUSTOMER.toString())
