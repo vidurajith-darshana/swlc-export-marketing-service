@@ -8,8 +8,8 @@ import com.swlc.swlcexportmarketingservice.entity.DeliveryDetail;
 import com.swlc.swlcexportmarketingservice.repository.DeliveryRepository;
 import com.swlc.swlcexportmarketingservice.repository.UserRepository;
 import com.swlc.swlcexportmarketingservice.service.Oauth2UserService;
-import com.swlc.swlcexportmarketingservice.utility.HtmlToString;
-import com.swlc.swlcexportmarketingservice.utility.MailSender;
+import com.swlc.swlcexportmarketingservice.util.HtmlToString;
+import com.swlc.swlcexportmarketingservice.util.MailSender;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,10 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import static com.swlc.swlcexportmarketingservice.constant.ApplicationConstant.*;
 

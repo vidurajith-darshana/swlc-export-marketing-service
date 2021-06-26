@@ -1,4 +1,4 @@
-package com.swlc.swlcexportmarketingservice.utility;
+package com.swlc.swlcexportmarketingservice.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
