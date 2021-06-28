@@ -20,4 +20,6 @@ public interface ProductService {
     void updateProductStatus(int productId, ProductStatus productStatus);
 
     void updateProductCurrentQty(int productId, int currentQty);
+
+    Page<ProductDTO> getAllProductsByCategoryId(int id, Pageable pageable);
 }

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,19 @@ public class UserProductController {
         log.info("Page : {}",pageable);
 
         Page<ProductDTO> allProducts = productService.getAllProducts(pageable);
+
+        return ResponseEntity.ok(new CommonResponseDTO(true, allProducts));
+
+    }
+
+    @GetMapping("/all/category")
+    public ResponseEntity<CommonResponseDTO> getAllProductsByCategoryId(@RequestParam("category") int categoryId, Pageable pageable, HttpServletRequest httpServletRequest) {
+
+        log.info("End point: " + httpServletRequest.getPathInfo());
+
+        log.info("Page : {}",pageable);
+
+        Page<ProductDTO> allProducts = productService.getAllProductsByCategoryId(categoryId,  pageable);
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allProducts));
 

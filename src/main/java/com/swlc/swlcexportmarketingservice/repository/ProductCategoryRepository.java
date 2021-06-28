@@ -1,5 +1,6 @@
 package com.swlc.swlcexportmarketingservice.repository;
 
+import com.swlc.swlcexportmarketingservice.entity.Category;
 import com.swlc.swlcexportmarketingservice.entity.Product;
 import com.swlc.swlcexportmarketingservice.entity.ProductCategory;
 import com.swlc.swlcexportmarketingservice.enums.CategoryStatus;
@@ -17,5 +18,8 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
 
     @Query("SELECT pc.fkProduct FROM  ProductCategory pc WHERE pc.fkCategory.categoryStatus=:categoryStatus")
     Page<ProductCategory> getProductsByCategoryStatus(@Param("categoryStatus") CategoryStatus categoryStatus, Pageable pageable);
+
+    @Query("SELECT pc.fkProduct FROM  ProductCategory pc WHERE pc.fkCategory=:category")
+    Page<Product> getProductByFkCategory(@Param("category")Category category, Pageable pageable);
 
 }

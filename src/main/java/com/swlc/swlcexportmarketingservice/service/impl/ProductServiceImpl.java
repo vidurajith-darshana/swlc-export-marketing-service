@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.swlc.swlcexportmarketingservice.constant.ApplicationConstant.*;
 
@@ -201,6 +202,8 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
+
+
     ProductDTO getProductDTO(Product product) {
         ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
 
@@ -216,4 +219,17 @@ public class ProductServiceImpl implements ProductService {
 
         return productDTO;
     }
+
+    @Override
+    public Page<ProductDTO> getAllProductsByCategoryId(int id, Pageable pageable) {
+        try {
+            Optional<Category> byId = categoryRepository.findById(id);
+            if(!byId.isPresent()) throw new SwlcExportMarketException(404, "Category not found");
+            Page<ProductDTO> map = productCategoryRepository.getProductByFkCategory(byId.get(), pageable).map(this::getProductDTO);
+            return map;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
 }
