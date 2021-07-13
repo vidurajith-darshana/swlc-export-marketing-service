@@ -26,9 +26,6 @@ public class Promotion {
     @Column(name = "ID")
     private Integer id;
 
-    @OneToMany(mappedBy = "fkUserPromotion",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<UserPromotion> fkUserPromotion;
-
     @NotNull
     @Column(name = "STATUS")
     @Enumerated(EnumType.STRING)
@@ -49,5 +46,8 @@ public class Promotion {
     @Column(name="CREATE_DATE")
     @CreationTimestamp
     private Date createDate = new Date();
+
+    @OneToMany(mappedBy = "fkPromotion",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<UserPromotion> fkUserPromotion;
 
 }

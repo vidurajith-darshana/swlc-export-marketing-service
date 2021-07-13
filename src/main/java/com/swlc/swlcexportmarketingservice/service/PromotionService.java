@@ -1,6 +1,7 @@
 package com.swlc.swlcexportmarketingservice.service;
 
 import com.swlc.swlcexportmarketingservice.dto.PromotionDTO;
+import com.swlc.swlcexportmarketingservice.enums.PromotionStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ public interface PromotionService {
     Page<PromotionDTO> getAllPromotions(Pageable pageable);
 
     void deletePromotion(int promotionId);
+
+    void updatePromotionStatus(int promotionId, PromotionStatus status);
 
 
 }

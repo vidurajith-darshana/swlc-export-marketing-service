@@ -2,6 +2,7 @@ package com.swlc.swlcexportmarketingservice.service.impl;
 
 import com.swlc.swlcexportmarketingservice.dto.PromotionDTO;
 import com.swlc.swlcexportmarketingservice.entity.Promotion;
+import com.swlc.swlcexportmarketingservice.enums.PromotionStatus;
 import com.swlc.swlcexportmarketingservice.exception.SwlcExportMarketException;
 import com.swlc.swlcexportmarketingservice.repository.PromotionRepository;
 import com.swlc.swlcexportmarketingservice.service.PromotionService;
@@ -41,7 +42,11 @@ public class PromotionServiceImpl implements PromotionService {
         if (image != null){
            promotionDTO.setImage(fileHandler.saveImageFile(image));
         }
+
+
         Promotion promotion = modelMapper.map(promotionDTO, Promotion.class);
+
+        promotion.setStatus(PromotionStatus.ACTIVE);
 
         promotion = promotionRepository.save(promotion);
 
@@ -82,6 +87,19 @@ public class PromotionServiceImpl implements PromotionService {
         if (!optionalPromotion.isPresent()) throw new SwlcExportMarketException(404,NOT_FOUND_PROMOTION);
 
         promotionRepository.deleteById(promotionId);
+    }
+
+    @Override
+    public void updatePromotionStatus(int promotionId, PromotionStatus status) {
+        Optional<Promotion> optionalPromotion = promotionRepository.findById(promotionId);
+
+        if (!optionalPromotion.isPresent()) throw new SwlcExportMarketException(404,NOT_FOUND_PROMOTION);
+
+        Promotion promotion = optionalPromotion.get();
+
+        promotion.setStatus(status);
+
+        promotionRepository.save(promotion);
     }
 
     PromotionDTO getPromotionDTO(Promotion promotion){

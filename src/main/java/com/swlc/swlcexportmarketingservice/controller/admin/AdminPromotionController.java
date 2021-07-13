@@ -3,6 +3,7 @@ package com.swlc.swlcexportmarketingservice.controller.admin;
 import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
 import com.swlc.swlcexportmarketingservice.dto.PromotionDTO;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
+import com.swlc.swlcexportmarketingservice.enums.PromotionStatus;
 import com.swlc.swlcexportmarketingservice.service.PromotionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -56,7 +57,17 @@ public class AdminPromotionController {
         return ResponseEntity.ok(new CommonResponseDTO(true, promotionDTO));
     }
 
-    @PutMapping("/delete/{promotionId}")
+    @DeleteMapping("/delete/{promotionId}")
+    public ResponseEntity<CommonResponseDTO> updatePrmotionStatus(@PathVariable(value = "promotionId") int promotionId, @RequestParam(value = "status") PromotionStatus status, HttpServletRequest httpServletRequest) {
+
+        log.info("End point: " + httpServletRequest.getPathInfo());
+
+        promotionService.updatePromotionStatus(promotionId,status);
+
+        return ResponseEntity.ok(new CommonResponseDTO(true, "Promotion status has been successfully updated!"));
+    }
+
+    @PutMapping("/update/{promotionId}/status")
     public ResponseEntity<CommonResponseDTO> deleteCategory(@PathVariable(value = "promotionId") int promotionId, HttpServletRequest httpServletRequest) {
 
         log.info("End point: " + httpServletRequest.getPathInfo());
