@@ -1,20 +1,21 @@
 package com.swlc.swlcexportmarketingservice.entity;
 
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
 @Data
-@Table(name = "PRODUCT_CATEGORY")
-public class ProductCategory {
+@Table(name = "PROMOTION")
+public class UserPromotion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,14 +23,14 @@ public class ProductCategory {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "FK_PRODUCT")
-    private Product fkProduct;
+    @JoinColumn(name = "FK_USER")
+    private User fkUser;
 
     @ManyToOne
-    @JoinColumn(name = "FK_CATEGORY")
-    private Category fkCategory;
+    @JoinColumn(name = "FK_PROMOTION")
+    private Promotion fkPromotion;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATE_DATE")
-    private Date createDate = new Date();
+    @NotNull
+    @Column(name = "LIKE_STATUS")
+    private Integer likeStatus;
 }

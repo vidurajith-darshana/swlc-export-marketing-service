@@ -37,4 +37,17 @@ public class OrderDetail {
     @ManyToOne
     @JoinColumn(name = "FK_PRODUCT")
     private Product fkProduct;
+
+    @ManyToOne
+    @JoinColumn(name = "FK_ORDER")
+    private Order fkOrder;
+
+    public OrderDetail(Integer id, @NotNull Double qty, @NotNull Double price, @NotNull Double subTotal, Product fkProduct, Order fkOrder) {
+        this.id = id;
+        this.qty = qty;
+        this.price = price;
+        this.subTotal = subTotal;
+        this.fkProduct = fkProduct;
+        this.fkOrder = fkOrder;
+    }
 }

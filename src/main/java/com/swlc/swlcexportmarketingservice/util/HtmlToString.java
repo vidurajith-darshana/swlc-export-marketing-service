@@ -1,4 +1,4 @@
-package com.swlc.swlcexportmarketingservice.utility;
+package com.swlc.swlcexportmarketingservice.util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

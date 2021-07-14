@@ -1,7 +1,9 @@
 package com.swlc.swlcexportmarketingservice.entity;
 
+import com.swlc.swlcexportmarketingservice.enums.CategoryStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
@@ -27,10 +29,15 @@ public class Category {
     @Column(name = "THUMBNAIL")
     private String thumbnail;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     @Column(name = "CREATE_DATE")
     private Date createDate = new Date();
 
     @OneToMany(mappedBy = "fkProduct",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<ProductCategory> fkProductCategories;
+
+    @NotNull
+    @Column(name = "STATUS")
+    @Enumerated(EnumType.STRING)
+    private CategoryStatus categoryStatus;
 }

@@ -1,14 +1,19 @@
 package com.swlc.swlcexportmarketingservice.entity;
 
+import com.swlc.swlcexportmarketingservice.enums.ProductStatus;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+
 @Entity
 @NoArgsConstructor
+@Getter
+@Setter
 @Data
 @Table(name = "PRODUCT")
 public class Product {
@@ -36,7 +41,8 @@ public class Product {
 
     @NotNull
     @Column(name = "STATUS")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
 
     @NotNull
     @Column(name = "TOTAL_QTY")
@@ -47,7 +53,7 @@ public class Product {
     private Integer currentQty;
 
     @Column(name="CREATE_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private Date createDate = new Date();
 
     @OneToMany(mappedBy = "fkProduct",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
@@ -55,5 +61,9 @@ public class Product {
 
     @OneToMany(mappedBy = "fkCategory",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<ProductCategory> fkProductCategories;
+
+    public Product(Integer id) {
+        this.id = id;
+    }
 
 }

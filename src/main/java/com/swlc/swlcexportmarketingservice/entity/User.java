@@ -48,4 +48,10 @@ public class User {
     @OneToMany(mappedBy = "fkUser",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Order> fkOrders;
 
+    @OneToMany(mappedBy = "fkPromotion",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<UserPromotion> fkUserPromotion;
+
+    public User(Integer id) {
+        this.id = id;
+    }
 }
