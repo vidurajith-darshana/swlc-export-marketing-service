@@ -8,6 +8,8 @@ public class ApplicationConstant {
     public static final String NOT_FOUND_PRODUCT = "Product not found!";
     public static final String NOT_FOUND_THUMBNAIL = "Thumbnail not found!";
     public static final String NOT_FOUND_PROMOTION = "Promotion not found!";
+    public static final String NOT_FOUND_TESTIMONIAL = "Testimonial not found!";
+    public static final String NOT_FOUND_VIDEO = "Video not found!";
 
     //Success Messages
     public static final String REQUEST_SUCCESS_MESSAGE = "Your request was success.";

@@ -10,7 +10,7 @@ import lombok.Setter;
 public class TestimonialDto {
 
     private int id;
-    private String imageUrl;
+    private String image;
     private String youtubeUrl;
     private String customerName;
     private String country;

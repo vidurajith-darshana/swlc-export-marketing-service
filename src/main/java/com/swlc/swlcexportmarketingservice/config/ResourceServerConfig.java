@@ -24,6 +24,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
                 // Admin
                 .antMatchers("/api/v1/user/operator/create").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_ADMIN.toString())
+                .antMatchers("/api/v1/testimonial/create").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_ADMIN.toString())
+                .antMatchers("/api/v1/testimonial/delete/{id}").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_ADMIN.toString())
                 .antMatchers("/api/v1/admin/category/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
                 .antMatchers("/api/v1/admin/product/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
                 .antMatchers("/api/v1/admin/promotion/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
@@ -32,6 +34,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/api/order/**").access("hasAuthority('ROLE_CUSTOMER')")
 
                 // Any User
+                .antMatchers("/api/v1/testimonial/getAll").permitAll()
                 .antMatchers("/api/v1/user/category/**").permitAll()
                 .antMatchers("/api/v1/user/product/**").permitAll()
                 .antMatchers("/api/v1/user/promotion/**").permitAll()

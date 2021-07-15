@@ -37,6 +37,10 @@ public class Testimonial {
     @Column(name = "COMMENT")
     private String comment;
 
+    @NotNull
+    @Column(name = "ACTIVE")
+    private Boolean active;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_DATE")
     private Date createDate = new Date();

@@ -5,10 +5,7 @@ import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.service.impl.TestimonialServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/testimonial")
@@ -18,7 +15,17 @@ public class TestimonialController {
     private TestimonialServiceImpl testimonialServiceImpl;
 
     @PostMapping("/create")
-    public ResponseEntity<CommonResponseDTO> createUser(@RequestBody TestimonialDto testimonialDto) {
+    public ResponseEntity<CommonResponseDTO> createTestimonial(@RequestBody TestimonialDto testimonialDto) {
         return testimonialServiceImpl.createTestimonial(testimonialDto);
+    }
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<CommonResponseDTO> deleteTestimonial(@PathVariable("id") int id) {
+        return testimonialServiceImpl.deleteTestimonial(id);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<CommonResponseDTO> getTestimonials() {
+        return testimonialServiceImpl.getTestimonials();
     }
 }

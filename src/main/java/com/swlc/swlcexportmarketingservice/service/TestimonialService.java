@@ -7,4 +7,8 @@ import org.springframework.http.ResponseEntity;
 public interface TestimonialService {
 
     ResponseEntity<CommonResponseDTO> createTestimonial(TestimonialDto testimonialDto);
+
+    ResponseEntity<CommonResponseDTO> deleteTestimonial(int testimonialId);
+
+    ResponseEntity<CommonResponseDTO> getTestimonials();
 }
