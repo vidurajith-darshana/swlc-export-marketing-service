@@ -225,7 +225,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             Optional<Category> byId = categoryRepository.findById(id);
             if(!byId.isPresent()) throw new SwlcExportMarketException(404, "Category not found");
-            Page<ProductDTO> map = productCategoryRepository.getProductByFkCategory(byId.get(), pageable).map(this::getProductDTO);
+            Page<ProductDTO> map = productCategoryRepository.getProductByFkCategory(byId.get(), CategoryStatus.ACTIVE, pageable).map(this::getProductDTO);
             return map;
         } catch (Exception e) {
             throw e;

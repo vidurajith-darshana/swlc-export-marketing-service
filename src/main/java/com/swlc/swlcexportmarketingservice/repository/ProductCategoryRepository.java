@@ -19,7 +19,7 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
     @Query("SELECT pc.fkProduct FROM  ProductCategory pc WHERE pc.fkCategory.categoryStatus=:categoryStatus")
     Page<ProductCategory> getProductsByCategoryStatus(@Param("categoryStatus") CategoryStatus categoryStatus, Pageable pageable);
 
-    @Query("SELECT pc.fkProduct FROM  ProductCategory pc WHERE pc.fkCategory=:category")
-    Page<Product> getProductByFkCategory(@Param("category")Category category, Pageable pageable);
+    @Query("SELECT pc.fkProduct FROM  ProductCategory pc WHERE pc.fkCategory=:category AND pc.fkCategory.categoryStatus=:categoryStatus")
+    Page<Product> getProductByFkCategory(@Param("category")Category category, @Param("categoryStatus") CategoryStatus categoryStatus, Pageable pageable);
 
 }
