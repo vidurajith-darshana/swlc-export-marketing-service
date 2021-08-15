@@ -16,13 +16,14 @@ public class ApplicationConstant {
 
     //Email Subjects
     public static final String FORGOT_PASSWORD_EMAIL_SUBJECT = "CHILLI - Reset Password Request!";
+    public static final String ORDER_PLACE_EMAIL_SUBJECT = "CHILLI - Order Placed Just!";
 
     public enum USER_ROLES {
         ROLE_CUSTOMER,ROLE_OPERATOR,ROLE_ADMIN
     }
 
     public enum ORDER_STATUS {
-        REVIEWING,IN_PROGRESS,DELIVERED
+        REVIEWING,IN_PROGRESS,DISPATCHED,DELIVERED
     }
 
     public enum PRODUCT_STATUS {

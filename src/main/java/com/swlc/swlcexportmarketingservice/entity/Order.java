@@ -32,6 +32,9 @@ public class Order {
     private String message;
 
     @NotNull
+    @Column(name = "ORDER_REF")
+    private String orderRef;
+
     @Column(name = "STATUS")
     private String status;
 

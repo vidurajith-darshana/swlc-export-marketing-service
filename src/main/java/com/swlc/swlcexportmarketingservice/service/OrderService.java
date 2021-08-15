@@ -9,5 +9,9 @@ public interface OrderService {
 
     ResponseEntity<CommonResponseDTO> getAllOrders();
 
+    ResponseEntity<CommonResponseDTO> trackOrder(String orderRef);
+
+    ResponseEntity<CommonResponseDTO> updateOrderStatus(String orderRef, String status);
+
     ResponseEntity<CommonResponseDTO> updateOrder(CommonOrderDTO commonOrderDTO);
 }
