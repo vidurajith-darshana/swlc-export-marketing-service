@@ -7,19 +7,23 @@ public class ApplicationConstant {
     public static final String NOT_FOUND_CATEGORY = "Category not found!";
     public static final String NOT_FOUND_PRODUCT = "Product not found!";
     public static final String NOT_FOUND_THUMBNAIL = "Thumbnail not found!";
+    public static final String NOT_FOUND_PROMOTION = "Promotion not found!";
+    public static final String NOT_FOUND_TESTIMONIAL = "Testimonial not found!";
+    public static final String NOT_FOUND_VIDEO = "Video not found!";
 
     //Success Messages
     public static final String REQUEST_SUCCESS_MESSAGE = "Your request was success.";
 
     //Email Subjects
     public static final String FORGOT_PASSWORD_EMAIL_SUBJECT = "CHILLI - Reset Password Request!";
+    public static final String ORDER_PLACE_EMAIL_SUBJECT = "CHILLI - Order Placed Just!";
 
     public enum USER_ROLES {
         ROLE_CUSTOMER,ROLE_OPERATOR,ROLE_ADMIN
     }
 
     public enum ORDER_STATUS {
-        REVIEWING,IN_PROGRESS,DELIVERED
+        REVIEWING,IN_PROGRESS,DISPATCHED,DELIVERED
     }
 
     public enum PRODUCT_STATUS {
