@@ -12,7 +12,7 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
 
     Order findOrderByOrderRef(String ref);
 
-    @Query(value = "SELECT * FROM Order o WHERE YEAR(o.createDate) = ?1 AND (?2 = 0 OR MONTH(o.createDate) = ?2) " +
-            "ORDER BY o.total desc LIMIT 10", nativeQuery = true)
+    @Query(value = "SELECT * FROM ORDERS o WHERE YEAR(o.CREATE_DATE) = ?1 AND (?2 = 0 OR MONTH(o.CREATE_DATE) = ?2) " +
+            "ORDER BY o.TOTAL desc LIMIT 10", nativeQuery = true)
     List<Order> getTop10OrdersByYearAndMonth(int yr, int mth);
 }

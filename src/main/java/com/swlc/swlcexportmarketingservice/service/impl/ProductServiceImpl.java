@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -242,7 +243,11 @@ public class ProductServiceImpl implements ProductService {
         try {
             List<Top10ProductsResponseDTO> top10ProductsDetails = new ArrayList<>();
             List<Top10ProductsRowDataDTO> top10ProductsByYearAndMonth = productRepository.getTop10ProductsByYearAndMonth(yr, mth);
+
+            System.out.println(top10ProductsByYearAndMonth.size());
+
             for (Top10ProductsRowDataDTO p : top10ProductsByYearAndMonth) {
+                System.out.println("X: " + p.getQty());
                 Product product = productRepository.findProductById(p.getPid());
                 ProductDTO productDTO = this.getProductDTO(product);
                 top10ProductsDetails.add(new Top10ProductsResponseDTO(productDTO, p.getQty()));

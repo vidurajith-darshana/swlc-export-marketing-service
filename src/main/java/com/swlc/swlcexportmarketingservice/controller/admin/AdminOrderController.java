@@ -25,7 +25,6 @@ public class AdminOrderController {
     private final OrderService orderService;
     private final ProductService productService;
 
-    @Autowired
     public AdminOrderController(OrderService orderService, ProductService productService) {
         this.orderService = orderService;
         this.productService = productService;
