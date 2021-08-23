@@ -2,8 +2,11 @@ package com.swlc.swlcexportmarketingservice.service.impl;
 
 import com.swlc.swlcexportmarketingservice.dto.OrderDetailDto;
 import com.swlc.swlcexportmarketingservice.dto.OrderDto;
+import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonOrderDTO;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
+import com.swlc.swlcexportmarketingservice.dto.response.FullOrderDTO;
+import com.swlc.swlcexportmarketingservice.dto.response.FullOrderDetailsDTO;
 import com.swlc.swlcexportmarketingservice.entity.NumberGenerator;
 import com.swlc.swlcexportmarketingservice.entity.Order;
 import com.swlc.swlcexportmarketingservice.entity.OrderDetail;
@@ -13,6 +16,7 @@ import com.swlc.swlcexportmarketingservice.mapper.OrderMapper;
 import com.swlc.swlcexportmarketingservice.repository.*;
 import com.swlc.swlcexportmarketingservice.service.OrderService;
 import com.swlc.swlcexportmarketingservice.util.MailSender;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,7 @@ import java.util.List;
 
 import static com.swlc.swlcexportmarketingservice.constant.ApplicationConstant.*;
 
+@Slf4j
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService {
@@ -550,4 +555,60 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findUserById(commonOrderDTO.getFkUserId());
         mailSender.sendEmail(user.getEmail(), doEmail+",", ORDER_PLACE_EMAIL_SUBJECT, html, true, null);
     }
+
+    @Override
+    public ResponseEntity<CommonResponseDTO> getAllTopOrders(int yr, int mth) {
+        try {
+            log.info("Execute getAllTopOrders: ");
+            List<Order> top10OrdersByYearAndMonth = orderRepository.getTop10OrdersByYearAndMonth(yr, mth);
+            List<FullOrderDTO> orderList = new ArrayList<>();
+            for (Order r : top10OrdersByYearAndMonth) {
+                FullOrderDTO fullOrderDTO = new FullOrderDTO();
+                fullOrderDTO.setId(r.getId());
+                fullOrderDTO.setTotal(r.getTotal());
+                fullOrderDTO.setMessage(r.getMessage());
+                fullOrderDTO.setOrderRef(r.getOrderRef());
+                fullOrderDTO.setStatus(r.getStatus());
+                fullOrderDTO.setCreateDate(r.getCreateDate());
+
+                List<FullOrderDetailsDTO> orderdtolist =  new ArrayList<>();
+                for (OrderDetail order : r.getFkOrder()) {
+
+                    FullOrderDetailsDTO fullOrderDetailsDTO = new FullOrderDetailsDTO();
+                    fullOrderDetailsDTO.setId(order.getId());
+                    fullOrderDetailsDTO.setPrice(order.getPrice());
+                    fullOrderDetailsDTO.setSubTotal(order.getSubTotal());
+                    fullOrderDetailsDTO.setQty(order.getQty());
+
+                    ProductDTO productDTO = new ProductDTO();
+                    productDTO.setId(order.getFkProduct().getId());
+                    productDTO.setCode(order.getFkProduct().getCode());
+                    productDTO.setName(order.getFkProduct().getName());
+                    productDTO.setThumbnail(order.getFkProduct().getThumbnail());
+                    productDTO.setPrice(order.getFkProduct().getPrice());
+                    productDTO.setStatus(order.getFkProduct().getStatus());
+                    productDTO.setTotalQty(order.getFkProduct().getTotalQty());
+                    productDTO.setCurrentQty(order.getFkProduct().getCurrentQty());
+                    productDTO.setCreateDate(order.getFkProduct().getCreateDate());
+                    productDTO.setCategories(new ArrayList<>());
+
+
+                    fullOrderDetailsDTO.setProduct(productDTO);
+
+                    orderdtolist.add(fullOrderDetailsDTO);
+
+                }
+
+                fullOrderDTO.setFkOrder(orderdtolist);
+                orderList.add(fullOrderDTO);
+            }
+
+            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, orderList), HttpStatus.OK);
+
+        } catch (Exception e) {
+            log.error("Execute getAllTopOrders: " + e.getMessage(), e);
+            throw e;
+        }
+    }
+
 }

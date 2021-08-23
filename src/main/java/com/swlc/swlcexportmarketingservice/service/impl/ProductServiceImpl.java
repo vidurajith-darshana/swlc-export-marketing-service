@@ -2,6 +2,9 @@ package com.swlc.swlcexportmarketingservice.service.impl;
 
 import com.swlc.swlcexportmarketingservice.dto.CategoryDTO;
 import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
+import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
+import com.swlc.swlcexportmarketingservice.dto.response.Top10ProductsResponseDTO;
+import com.swlc.swlcexportmarketingservice.dto.row_data.Top10ProductsRowDataDTO;
 import com.swlc.swlcexportmarketingservice.entity.Category;
 import com.swlc.swlcexportmarketingservice.entity.Product;
 import com.swlc.swlcexportmarketingservice.entity.ProductCategory;
@@ -16,9 +19,12 @@ import com.swlc.swlcexportmarketingservice.util.FileHandler;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -227,6 +233,26 @@ public class ProductServiceImpl implements ProductService {
             if(!byId.isPresent()) throw new SwlcExportMarketException(404, "Category not found");
             Page<ProductDTO> map = productCategoryRepository.getProductByFkCategory(byId.get(), CategoryStatus.ACTIVE, pageable).map(this::getProductDTO);
             return map;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<CommonResponseDTO> getAllTopProducts(int yr, int mth) {
+        try {
+            List<Top10ProductsResponseDTO> top10ProductsDetails = new ArrayList<>();
+            List<Top10ProductsRowDataDTO> top10ProductsByYearAndMonth = productRepository.getTop10ProductsByYearAndMonth(yr, mth);
+
+            System.out.println(top10ProductsByYearAndMonth.size());
+
+            for (Top10ProductsRowDataDTO p : top10ProductsByYearAndMonth) {
+                System.out.println("X: " + p.getQty());
+                Product product = productRepository.findProductById(p.getPid());
+                ProductDTO productDTO = this.getProductDTO(product);
+                top10ProductsDetails.add(new Top10ProductsResponseDTO(productDTO, p.getQty()));
+            }
+            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, top10ProductsDetails), HttpStatus.OK);
         } catch (Exception e) {
             throw e;
         }
