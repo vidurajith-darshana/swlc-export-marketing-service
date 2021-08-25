@@ -1,16 +1,12 @@
 package com.swlc.swlcexportmarketingservice.service.impl;
 
-import com.swlc.swlcexportmarketingservice.dto.OrderDetailDto;
-import com.swlc.swlcexportmarketingservice.dto.OrderDto;
-import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
+import com.swlc.swlcexportmarketingservice.dto.*;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonOrderDTO;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.dto.response.FullOrderDTO;
 import com.swlc.swlcexportmarketingservice.dto.response.FullOrderDetailsDTO;
-import com.swlc.swlcexportmarketingservice.entity.NumberGenerator;
-import com.swlc.swlcexportmarketingservice.entity.Order;
-import com.swlc.swlcexportmarketingservice.entity.OrderDetail;
-import com.swlc.swlcexportmarketingservice.entity.User;
+import com.swlc.swlcexportmarketingservice.entity.*;
+import com.swlc.swlcexportmarketingservice.exception.SwlcExportMarketException;
 import com.swlc.swlcexportmarketingservice.mapper.OrderDetailMapper;
 import com.swlc.swlcexportmarketingservice.mapper.OrderMapper;
 import com.swlc.swlcexportmarketingservice.repository.*;
@@ -19,6 +15,7 @@ import com.swlc.swlcexportmarketingservice.util.MailSender;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -29,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.swlc.swlcexportmarketingservice.constant.ApplicationConstant.*;
 
@@ -60,6 +58,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private MailSender mailSender;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Value("${Dataentry.operator.mail}")
     private String doEmail;
@@ -570,6 +571,9 @@ public class OrderServiceImpl implements OrderService {
                 fullOrderDTO.setOrderRef(r.getOrderRef());
                 fullOrderDTO.setStatus(r.getStatus());
                 fullOrderDTO.setCreateDate(r.getCreateDate());
+                UserDto userDTO = modelMapper.map(r.getFkUser(), UserDto.class);
+                userDTO.setPassword(null);
+                fullOrderDTO.setFkUser(userDTO);
 
                 List<FullOrderDetailsDTO> orderdtolist =  new ArrayList<>();
                 for (OrderDetail order : r.getFkOrder()) {
@@ -607,6 +611,134 @@ public class OrderServiceImpl implements OrderService {
 
         } catch (Exception e) {
             log.error("Execute getAllTopOrders: " + e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<CommonResponseDTO> getAllCustomerOrdersById(int customerId) {
+        log.info("Execute getAllCustomerOrdersById: customerId :" + customerId);
+        try {
+            Optional<User> userOptional = userRepository.findById(customerId);
+            if(!userOptional.isPresent()) throw new SwlcExportMarketException(404, "User not found");
+            List<Order> top10OrdersByYearAndMonth = orderRepository.getOrdersByUserId(userOptional.get().getId());
+
+            List<FullOrderDTO> fullOrderDTOList =  new ArrayList<>();
+
+            for (Order r : top10OrdersByYearAndMonth) {
+                FullOrderDTO fullOrderDTO = new FullOrderDTO();
+                fullOrderDTO.setId(r.getId());
+                fullOrderDTO.setTotal(r.getTotal());
+                fullOrderDTO.setMessage(r.getMessage());
+                fullOrderDTO.setOrderRef(r.getOrderRef());
+                fullOrderDTO.setStatus(r.getStatus());
+                fullOrderDTO.setCreateDate(r.getCreateDate());
+                UserDto userDTO = modelMapper.map(r.getFkUser(), UserDto.class);
+                userDTO.setPassword(null);
+                fullOrderDTO.setFkUser(userDTO);
+
+                List<FullOrderDetailsDTO> orderdtolist =  new ArrayList<>();
+                for (OrderDetail order : r.getFkOrder()) {
+
+                    FullOrderDetailsDTO fullOrderDetailsDTO = new FullOrderDetailsDTO();
+                    fullOrderDetailsDTO.setId(order.getId());
+                    fullOrderDetailsDTO.setPrice(order.getPrice());
+                    fullOrderDetailsDTO.setSubTotal(order.getSubTotal());
+                    fullOrderDetailsDTO.setQty(order.getQty());
+
+                    ProductDTO productDTO = new ProductDTO();
+                    productDTO.setId(order.getFkProduct().getId());
+                    productDTO.setCode(order.getFkProduct().getCode());
+                    productDTO.setName(order.getFkProduct().getName());
+                    productDTO.setThumbnail(order.getFkProduct().getThumbnail());
+                    productDTO.setPrice(order.getFkProduct().getPrice());
+                    productDTO.setStatus(order.getFkProduct().getStatus());
+                    productDTO.setTotalQty(order.getFkProduct().getTotalQty());
+                    productDTO.setCurrentQty(order.getFkProduct().getCurrentQty());
+                    productDTO.setCreateDate(order.getFkProduct().getCreateDate());
+                    productDTO.setCategories(new ArrayList<>());
+
+
+                    fullOrderDetailsDTO.setProduct(productDTO);
+
+                    orderdtolist.add(fullOrderDetailsDTO);
+
+                }
+
+                fullOrderDTO.setFkOrder(orderdtolist);
+                fullOrderDTOList.add(fullOrderDTO);
+            }
+
+            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, fullOrderDTOList), HttpStatus.OK);
+
+        } catch (Exception e) {
+            log.error("Execute getAllCustomerOrdersById: " + e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<CommonResponseDTO> getAllOrdersByAdmin() {
+        log.info("Execute getAllOrdersByAdmin: ");
+        try {
+            List<Order> top10OrdersByYearAndMonth = orderRepository.findAll();
+
+            List<FullOrderDTO> fullOrderDTOList =  new ArrayList<>();
+
+            for (Order r : top10OrdersByYearAndMonth) {
+                FullOrderDTO fullOrderDTO = new FullOrderDTO();
+                fullOrderDTO.setId(r.getId());
+                fullOrderDTO.setTotal(r.getTotal());
+                fullOrderDTO.setMessage(r.getMessage());
+                fullOrderDTO.setOrderRef(r.getOrderRef());
+                fullOrderDTO.setStatus(r.getStatus());
+                fullOrderDTO.setCreateDate(r.getCreateDate());
+                UserDto userDTO = modelMapper.map(r.getFkUser(), UserDto.class);
+                userDTO.setPassword(null);
+                fullOrderDTO.setFkUser(userDTO);
+
+                List<FullOrderDetailsDTO> orderdtolist =  new ArrayList<>();
+                for (OrderDetail order : r.getFkOrder()) {
+
+                    FullOrderDetailsDTO fullOrderDetailsDTO = new FullOrderDetailsDTO();
+                    fullOrderDetailsDTO.setId(order.getId());
+                    fullOrderDetailsDTO.setPrice(order.getPrice());
+                    fullOrderDetailsDTO.setSubTotal(order.getSubTotal());
+                    fullOrderDetailsDTO.setQty(order.getQty());
+
+                    ProductDTO productDTO = new ProductDTO();
+                    productDTO.setId(order.getFkProduct().getId());
+                    productDTO.setCode(order.getFkProduct().getCode());
+                    productDTO.setName(order.getFkProduct().getName());
+                    productDTO.setThumbnail(order.getFkProduct().getThumbnail());
+                    productDTO.setPrice(order.getFkProduct().getPrice());
+                    productDTO.setStatus(order.getFkProduct().getStatus());
+                    productDTO.setTotalQty(order.getFkProduct().getTotalQty());
+                    productDTO.setCurrentQty(order.getFkProduct().getCurrentQty());
+                    productDTO.setCreateDate(order.getFkProduct().getCreateDate());
+
+                    List<ProductCategory> fkProductCategories = order.getFkProduct().getFkProductCategories();
+                    List<CategoryDTO> categoryDTOList = new ArrayList<>();
+                    for (ProductCategory p : fkProductCategories) {
+                        categoryDTOList.add(modelMapper.map(p, CategoryDTO.class));
+                    }
+
+                    productDTO.setCategories(categoryDTOList);
+
+                    fullOrderDetailsDTO.setProduct(productDTO);
+
+                    orderdtolist.add(fullOrderDetailsDTO);
+
+                }
+
+                fullOrderDTO.setFkOrder(orderdtolist);
+                fullOrderDTOList.add(fullOrderDTO);
+            }
+
+            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, fullOrderDTOList), HttpStatus.OK);
+
+        } catch (Exception e) {
+            log.error("Execute getAllOrdersByAdmin: " + e.getMessage(), e);
             throw e;
         }
     }
