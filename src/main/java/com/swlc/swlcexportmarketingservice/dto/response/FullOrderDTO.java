@@ -1,5 +1,6 @@
 package com.swlc.swlcexportmarketingservice.dto.response;
 
+import com.swlc.swlcexportmarketingservice.dto.UserDto;
 import com.swlc.swlcexportmarketingservice.entity.OrderDetail;
 import com.swlc.swlcexportmarketingservice.entity.User;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public class FullOrderDTO {
     private Integer id;
-    private User fkUser;
+    private UserDto fkUser;
     private Double total;
     private String message;
     private String orderRef;
@@ -24,7 +25,7 @@ public class FullOrderDTO {
     public FullOrderDTO() {
     }
 
-    public FullOrderDTO(Integer id, User fkUser, Double total, String message, String orderRef, String status, Date createDate, List<FullOrderDetailsDTO> fkOrder) {
+    public FullOrderDTO(Integer id, UserDto fkUser, Double total, String message, String orderRef, String status, Date createDate, List<FullOrderDetailsDTO> fkOrder) {
         this.id = id;
         this.fkUser = fkUser;
         this.total = total;
@@ -43,11 +44,11 @@ public class FullOrderDTO {
         this.id = id;
     }
 
-    public User getFkUser() {
+    public UserDto getFkUser() {
         return fkUser;
     }
 
-    public void setFkUser(User fkUser) {
+    public void setFkUser(UserDto fkUser) {
         this.fkUser = fkUser;
     }
 

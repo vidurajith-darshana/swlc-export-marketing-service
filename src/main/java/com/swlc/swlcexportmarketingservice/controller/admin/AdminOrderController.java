@@ -41,4 +41,10 @@ public class AdminOrderController {
         log.info("End point: " + httpServletRequest.getPathInfo());
             return productService.getAllTopProducts(yr, mnth);
     }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<CommonResponseDTO> getAllOrderByAdmin(HttpServletRequest httpServletRequest) {
+        log.info("End point: " + httpServletRequest.getPathInfo());
+        return orderService.getAllOrdersByAdmin();
+    }
 }
