@@ -5,11 +5,14 @@ import com.swlc.swlcexportmarketingservice.dto.DeliveryDto;
 import com.swlc.swlcexportmarketingservice.dto.UserDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.entity.DeliveryDetail;
+import com.swlc.swlcexportmarketingservice.entity.User;
+import com.swlc.swlcexportmarketingservice.exception.SwlcExportMarketException;
 import com.swlc.swlcexportmarketingservice.repository.DeliveryRepository;
 import com.swlc.swlcexportmarketingservice.repository.UserRepository;
 import com.swlc.swlcexportmarketingservice.service.Oauth2UserService;
 import com.swlc.swlcexportmarketingservice.util.HtmlToString;
 import com.swlc.swlcexportmarketingservice.util.MailSender;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +28,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static com.swlc.swlcexportmarketingservice.constant.ApplicationConstant.*;
 
+@Slf4j
 @Service(value = "userService")
 public class Oauth2UserServiceImpl implements UserDetailsService, Oauth2UserService {
 
@@ -234,6 +241,63 @@ public class Oauth2UserServiceImpl implements UserDetailsService, Oauth2UserServ
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             return new ResponseEntity<>(new CommonResponseDTO(false, APPLICATION_ERROR_OCCURRED_MESSAGE, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<CommonResponseDTO> getAllOperator() {
+        log.info("Execute getAllOperator: ");
+        try {
+            List<User> role_operator = userRepository.getAllUsersByRole("ROLE_OPERATOR");
+            List<UserDto> role_operator_list = new ArrayList<>();
+            for (User u : role_operator) {
+                UserDto userDto = new UserDto();
+                userDto.setId(u.getId());
+                userDto.setEmail(u.getEmail());
+                userDto.setFirstName(u.getFirstName());
+                userDto.setLastName(u.getLastName());
+                userDto.setRole(u.getRole());
+                role_operator_list.add(userDto);
+            }
+            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, "Operator's data found successfully!"), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Execute getAllOperator: " + e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<CommonResponseDTO> updateOperator(UserDto dto) {
+        log.info("Execute getAllOperator: ");
+        try {
+            Optional<User> userOptional = userRepository.findByIdAndRole(dto.getId(), "ROLE_OPERATOR");
+            if(!userOptional.isPresent()) throw new SwlcExportMarketException(404,"Operator not found");
+            User user = userOptional.get();
+            user.setFirstName(dto.getFirstName());
+            user.setLastName(dto.getLastName());
+            user.setEmail(dto.getEmail());
+            if(dto.getPassword()!=null&&dto.getPassword().equals("")) {
+                user.setPassword(passwordEncoder.encode(dto.getPassword()));
+            }
+            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, "Operator updated successfully!"), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Execute getAllOperator: " + e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<CommonResponseDTO> deleteOperator(int id) {
+        log.info("Execute getAllOperator: ");
+        try {
+            Optional<User> userOptional = userRepository.findByIdAndRole(id, "ROLE_OPERATOR");
+            if(!userOptional.isPresent()) throw new SwlcExportMarketException(404,"Operator not found");
+            User user = userOptional.get();
+            userRepository.delete(user);
+            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, "Operator deleted successfully!"), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Execute getAllOperator: " + e.getMessage(), e);
+            throw e;
         }
     }
 }

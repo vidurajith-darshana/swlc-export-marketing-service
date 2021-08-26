@@ -18,4 +18,11 @@ public interface Oauth2UserService {
     ResponseEntity<CommonResponseDTO> forgetPassword(String email);
 
     ResponseEntity<CommonResponseDTO> resetPassword(String email,String verifyCode,String password);
+
+    ResponseEntity<CommonResponseDTO> getAllOperator();
+
+    ResponseEntity<CommonResponseDTO> updateOperator(UserDto dto);
+
+    ResponseEntity<CommonResponseDTO> deleteOperator(int id);
+
 }
