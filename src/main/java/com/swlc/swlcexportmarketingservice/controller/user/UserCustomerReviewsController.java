@@ -1,5 +1,6 @@
 package com.swlc.swlcexportmarketingservice.controller.user;
 
+import com.swlc.swlcexportmarketingservice.dto.CustomerReviewSaveRequestDTO;
 import com.swlc.swlcexportmarketingservice.dto.CustomerReviewsDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.service.CustomerReviewService;
@@ -30,7 +31,7 @@ public class UserCustomerReviewsController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponseDTO> getSaveCustomerReview(@RequestBody CustomerReviewsDto dto, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<CommonResponseDTO> getSaveCustomerReview(@RequestBody CustomerReviewSaveRequestDTO dto, HttpServletRequest httpServletRequest) {
         boolean b = customerReviewService.saveNewReview(dto);
         return new ResponseEntity<>(new CommonResponseDTO(true, "Customer reviews saved successfully", null), HttpStatus.OK);
     }

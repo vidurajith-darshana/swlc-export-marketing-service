@@ -1,5 +1,6 @@
 package com.swlc.swlcexportmarketingservice.service.impl;
 
+import com.swlc.swlcexportmarketingservice.dto.CustomerReviewSaveRequestDTO;
 import com.swlc.swlcexportmarketingservice.dto.CustomerReviewsDto;
 import com.swlc.swlcexportmarketingservice.dto.UserDto;
 import com.swlc.swlcexportmarketingservice.entity.CustomerReviews;
@@ -34,12 +35,12 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
     }
 
     @Override
-    public boolean saveNewReview(CustomerReviewsDto dto) {
+    public boolean saveNewReview(CustomerReviewSaveRequestDTO dto) {
         User userEntity = null;
         try {
-            UserDto user = dto.getUser();
+            Integer user = dto.getUserId();
             if (user != null) {
-                userEntity = userRepository.findUserById(user.getId());
+                userEntity = userRepository.findUserById(user);
                 if (userEntity == null) throw new SwlcExportMarketException(404, "User not found");
             }
             customerReviewRepository.save(
