@@ -30,9 +30,15 @@ public class UserCustomerReviewsController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponseDTO> getAllProducts(@RequestBody CustomerReviewsDto dto, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<CommonResponseDTO> getSaveCustomerReview(@RequestBody CustomerReviewsDto dto, HttpServletRequest httpServletRequest) {
         boolean b = customerReviewService.saveNewReview(dto);
-        return new ResponseEntity<>(new CommonResponseDTO(true, "Customer reviews found successfully", null), HttpStatus.OK);
+        return new ResponseEntity<>(new CommonResponseDTO(true, "Customer reviews saved successfully", null), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<CommonResponseDTO> getAllReview(@RequestParam("yr") int yr, @RequestParam("mnth") int mnth, Pageable pageable, HttpServletRequest httpServletRequest) {
+        Page<CustomerReviewsDto> results = customerReviewService.getCustomerReviews(yr, mnth, pageable);
+        return new ResponseEntity<>(new CommonResponseDTO(true, "Customer reviews found successfully", results), HttpStatus.OK);
     }
 
 }
