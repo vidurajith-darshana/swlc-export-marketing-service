@@ -259,7 +259,7 @@ public class Oauth2UserServiceImpl implements UserDetailsService, Oauth2UserServ
                 userDto.setRole(u.getRole());
                 role_operator_list.add(userDto);
             }
-            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, "Operator's data found successfully!"), HttpStatus.OK);
+            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, role_operator_list), HttpStatus.OK);
         } catch (Exception e) {
             log.error("Execute getAllOperator: " + e.getMessage(), e);
             throw e;
