@@ -22,4 +22,7 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
     List<Order> getOrdersByUserId(int id);
 
     List<Order> findByFkUser(User user);
+
+    @Query(value = "SELECT COUNT(*) FROM ORDERS o", nativeQuery = true)
+    int getCountOfOrders();
 }
