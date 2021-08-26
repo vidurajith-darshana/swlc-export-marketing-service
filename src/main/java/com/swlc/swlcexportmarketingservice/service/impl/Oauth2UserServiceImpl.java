@@ -76,7 +76,7 @@ public class Oauth2UserServiceImpl implements UserDetailsService, Oauth2UserServ
                 user = new com.swlc.swlcexportmarketingservice.entity.User();
                 user.setEmail(userDto.getEmail());
                 user.setFirstName(userDto.getFirstName());
-                user.setFirstName(userDto.getLastName());
+                user.setLastName(userDto.getLastName());
                 user.setRole(userDto.getRole());
                 user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
