@@ -2,6 +2,7 @@ package com.swlc.swlcexportmarketingservice.service.impl;
 
 import com.swlc.swlcexportmarketingservice.dto.CategoryDTO;
 import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
+import com.swlc.swlcexportmarketingservice.dto.ProductRequestDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.dto.response.Top10ProductsResponseDTO;
 import com.swlc.swlcexportmarketingservice.dto.row_data.Top10ProductsRowDataDTO;
@@ -267,26 +268,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<CommonResponseDTO> getAllTopProducts(int yr, int mth) {
-        try {
-            List<Top10ProductsResponseDTO> top10ProductsDetails = new ArrayList<>();
-            List<Top10ProductsRowDataDTO> top10ProductsByYearAndMonth = productRepository.getTop10ProductsByYearAndMonth(yr, mth);
-
-            System.out.println(top10ProductsByYearAndMonth.size());
-
-            for (Top10ProductsRowDataDTO p : top10ProductsByYearAndMonth) {
-                System.out.println("X: " + p.getQty());
-                Product product = productRepository.findProductById(p.getPid());
-                ProductDTO productDTO = this.getProductDTO(product);
-                top10ProductsDetails.add(new Top10ProductsResponseDTO(productDTO, p.getQty()));
-            }
-            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, top10ProductsDetails), HttpStatus.OK);
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    @Override
     public ResponseEntity<CommonResponseDTO> requestProductDetails(ProductRequestDto productRequestDto) {
         try {
 
@@ -305,4 +286,23 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public ResponseEntity<CommonResponseDTO> getAllTopProducts(int yr, int mth) {
+        try {
+            List<Top10ProductsResponseDTO> top10ProductsDetails = new ArrayList<>();
+            List<Top10ProductsRowDataDTO> top10ProductsByYearAndMonth = productRepository.getTop10ProductsByYearAndMonth(yr, mth);
+
+            System.out.println(top10ProductsByYearAndMonth.size());
+
+            for (Top10ProductsRowDataDTO p : top10ProductsByYearAndMonth) {
+                System.out.println("X: " + p.getQty());
+                Product product = productRepository.findProductById(p.getPid());
+                ProductDTO productDTO = this.getProductDTO(product);
+                top10ProductsDetails.add(new Top10ProductsResponseDTO(productDTO, p.getQty()));
+            }
+            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, top10ProductsDetails), HttpStatus.OK);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }
