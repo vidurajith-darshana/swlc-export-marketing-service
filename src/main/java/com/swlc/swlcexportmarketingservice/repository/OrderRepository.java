@@ -25,4 +25,9 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
 
     @Query(value = "SELECT COUNT(*) FROM ORDERS o", nativeQuery = true)
     int getCountOfOrders();
+
+    @Query(value = "SELECT * FROM ORDERS o WHERE o.ORDER_REF LIKE ?1%", nativeQuery = true)
+    List<Order> getAllOrdersWithRef(String ref);
+
+
 }

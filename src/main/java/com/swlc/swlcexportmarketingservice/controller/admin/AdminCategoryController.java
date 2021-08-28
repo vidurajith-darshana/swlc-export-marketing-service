@@ -33,13 +33,13 @@ public class AdminCategoryController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<CommonResponseDTO> getAllCategories(Pageable pageable, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<CommonResponseDTO> getAllCategories(@RequestParam("search") String search, Pageable pageable, HttpServletRequest httpServletRequest) {
 
         log.info("End point: " + httpServletRequest.getPathInfo());
 
         log.info("Page : {}",pageable);
 
-        Page<CategoryDTO> allCategory = categoryService.getAllCategoryByAdmin(pageable);
+        Page<CategoryDTO> allCategory = categoryService.getAllCategoryByAdmin(search, pageable);
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allCategory));
 

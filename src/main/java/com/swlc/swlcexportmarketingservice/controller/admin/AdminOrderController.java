@@ -43,8 +43,8 @@ public class AdminOrderController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<CommonResponseDTO> getAllOrderByAdmin(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<CommonResponseDTO> getAllOrderByAdmin(@RequestParam("ref") String ref,  HttpServletRequest httpServletRequest) {
         log.info("End point: " + httpServletRequest.getPathInfo());
-        return orderService.getAllOrdersByAdmin();
+        return orderService.getAllOrdersByAdmin(ref);
     }
 }

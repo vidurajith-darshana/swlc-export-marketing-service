@@ -13,7 +13,7 @@ public interface ProductService {
 
     Page<ProductDTO> getAllProducts(Pageable pageable);
 
-    Page<ProductDTO> getAllProductsByAdmin(Pageable pageable);
+    Page<ProductDTO> getAllProductsByAdmin(String search, Pageable pageable);
 
     ProductDTO saveProduct(ProductDTO productDTO);
 

@@ -19,5 +19,5 @@ public interface OrderService {
 
     ResponseEntity<CommonResponseDTO> getAllCustomerOrdersById(int customerId);
 
-    ResponseEntity<CommonResponseDTO> getAllOrdersByAdmin();
+    ResponseEntity<CommonResponseDTO> getAllOrdersByAdmin(String ref);
 }

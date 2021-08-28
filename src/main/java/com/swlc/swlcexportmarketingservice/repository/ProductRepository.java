@@ -18,6 +18,9 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     @Query("SELECT p FROM Product p GROUP BY p.id ORDER BY p.id DESC ")
     Page<Product> getAllProducts(Pageable pageable);
 
+    @Query(value = "SELECT * FROM PRODUCT p WHERE p.NAME LIKE ?1% OR p.CODE LIKE ?1% GROUP BY p.ID ORDER BY p.ID DESC ", nativeQuery = true)
+    Page<Product> getAllProductsWithSearch(String search, Pageable pageable);
+
     Product findProductById(int id);
 
     @Query("SELECT p FROM Product p, Category c, ProductCategory pc WHERE pc.fkProduct=p AND pc.fkCategory=c AND c.categoryStatus=:catStatus AND p.status=:proStatus ORDER BY p.id DESC")

@@ -56,8 +56,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDTO> getAllProductsByAdmin(Pageable pageable) {
-        return productRepository.getAllProducts(pageable).map(this::getProductDTO);
+    public Page<ProductDTO> getAllProductsByAdmin(String search, Pageable pageable) {
+        return productRepository.getAllProductsWithSearch(search, pageable).map(this::getProductDTO);
     }
 
     @Override
