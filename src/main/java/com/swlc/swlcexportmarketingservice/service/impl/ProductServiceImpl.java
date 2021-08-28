@@ -27,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,8 +47,8 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private MailSender mailSender;
 
-    @Value("classpath:html-templates/product-request.html")
-    Resource productRequestHtml;
+    @Value("${server.upload.url}")
+    private String archivePath;
 
     @Value("${admin.mail}")
     private String adminMail;
@@ -254,7 +255,8 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<CommonResponseDTO> requestProductDetails(ProductRequestDto productRequestDto) {
         try {
 
-            String html = new HtmlToString().convertHtmlToString(productRequestHtml.getFile().getPath());
+            File productRequestHtml = new File(archivePath+"html-templates/product-request.html");
+            String html = new HtmlToString().convertHtmlToString(productRequestHtml.getPath());
             html = html.replace("xProductCode",productRequestDto.getProductCode());
             html = html.replace("xProductName",productRequestDto.getProductName());
             html = html.replace("xCustomerName",productRequestDto.getCustomerName());

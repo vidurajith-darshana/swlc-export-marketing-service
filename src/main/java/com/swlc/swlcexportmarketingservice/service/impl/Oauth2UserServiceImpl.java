@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.security.SecureRandom;
 import java.util.Collections;
 
@@ -44,8 +45,8 @@ public class Oauth2UserServiceImpl implements UserDetailsService, Oauth2UserServ
     @Autowired
     private MailSender mailSender;
 
-    @Value("classpath:html-templates/forgot-password.html")
-    Resource forgetPasswordHtml;
+    @Value("${server.upload.url}")
+    private String archivePath;
 
     private static final Logger LOGGER = LogManager.getLogger(Oauth2UserServiceImpl.class);
 
@@ -196,7 +197,8 @@ public class Oauth2UserServiceImpl implements UserDetailsService, Oauth2UserServ
                 user.setVerifyCode(formatted);
                 userRepository.save(user);
 
-                String html = new HtmlToString().convertHtmlToString(forgetPasswordHtml.getFile().getPath());
+                File forgetPasswordHtml = new File(archivePath+"html-templates/forgot-password.html");
+                String html = new HtmlToString().convertHtmlToString(forgetPasswordHtml.getPath());
                 html = html.replace("xVerifyCode",formatted);
 
                 mailSender.sendEmail(user.getEmail(),null, FORGOT_PASSWORD_EMAIL_SUBJECT, html, true, null);
