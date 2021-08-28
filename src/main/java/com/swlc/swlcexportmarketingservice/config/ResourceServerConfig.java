@@ -46,7 +46,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/api/v1/user/operator/create").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_ADMIN.toString())
                 .antMatchers("/api/v1/user/customer/save/delivery-details").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_CUSTOMER.toString())
                 .antMatchers("/api/v1/user/customer/update").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_CUSTOMER.toString())
-                .antMatchers("/api/v1/user/operator/update").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_OPERATOR.toString())
+                .antMatchers("/api/v1/user/operator/update").access("hasAnyRole('ROLE_OPERATOR','ROLE_ADMIN')")
                 .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
         http.csrf().disable();
     }
