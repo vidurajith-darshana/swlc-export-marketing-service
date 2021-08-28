@@ -56,6 +56,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductDTO> getAllActiveProducts() {
+        try {
+            List<Product> allActiveProducts = productRepository.getAllActiveProducts(CategoryStatus.ACTIVE, ProductStatus.ACTIVE);
+            List<ProductDTO> productDTOS = new ArrayList<>();
+            for (Product p :allActiveProducts) {
+                productDTOS.add(this.getProductDTO(p));
+            }
+            return productDTOS;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
     public Page<ProductDTO> getAllProductsByAdmin(String search, Pageable pageable) {
         return productRepository.getAllProductsWithSearch(search, pageable).map(this::getProductDTO);
     }
