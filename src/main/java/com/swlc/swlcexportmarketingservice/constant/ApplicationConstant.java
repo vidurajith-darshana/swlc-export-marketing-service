@@ -17,6 +17,7 @@ public class ApplicationConstant {
     //Email Subjects
     public static final String FORGOT_PASSWORD_EMAIL_SUBJECT = "CHILLI - Reset Password Request!";
     public static final String ORDER_PLACE_EMAIL_SUBJECT = "CHILLI - Order Placed Just!";
+    public static final String PRODUCT_REQUEST_EMAIL_SUBJECT = "CHILLI - Product Detail Request!";
 
     public enum USER_ROLES {
         ROLE_CUSTOMER,ROLE_OPERATOR,ROLE_ADMIN
