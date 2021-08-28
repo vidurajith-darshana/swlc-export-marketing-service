@@ -8,12 +8,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface ProductService {
 
     Page<ProductDTO> getAllProducts(Pageable pageable);
 
-    Page<ProductDTO> getAllProductsByAdmin(Pageable pageable);
+    List<ProductDTO> getAllActiveProducts();
+
+    Page<ProductDTO> getAllProductsByAdmin(String search, Pageable pageable);
 
     ProductDTO saveProduct(ProductDTO productDTO);
 

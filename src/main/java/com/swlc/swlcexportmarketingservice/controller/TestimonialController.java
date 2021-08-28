@@ -4,6 +4,7 @@ import com.swlc.swlcexportmarketingservice.dto.TestimonialDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.service.impl.TestimonialServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class TestimonialController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<CommonResponseDTO> getTestimonials() {
-        return testimonialServiceImpl.getTestimonials();
+    public ResponseEntity<CommonResponseDTO> getTestimonials(@Param("search") String search) {
+        return testimonialServiceImpl.getTestimonials(search);
     }
 }

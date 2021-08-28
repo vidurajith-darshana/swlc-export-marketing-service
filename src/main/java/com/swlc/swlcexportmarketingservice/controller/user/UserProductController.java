@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -34,6 +35,17 @@ public class UserProductController {
         log.info("Page : {}",pageable);
 
         Page<ProductDTO> allProducts = productService.getAllProducts(pageable);
+
+        return ResponseEntity.ok(new CommonResponseDTO(true, allProducts));
+
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<CommonResponseDTO> getAllActiveProducts(HttpServletRequest httpServletRequest) {
+
+        log.info("End point: " + httpServletRequest.getPathInfo());
+
+        List<ProductDTO> allProducts = productService.getAllActiveProducts();
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allProducts));
 

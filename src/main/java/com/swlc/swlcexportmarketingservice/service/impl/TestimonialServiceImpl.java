@@ -77,9 +77,9 @@ public class TestimonialServiceImpl implements TestimonialService {
     }
 
     @Override
-    public ResponseEntity<CommonResponseDTO> getTestimonials() {
+    public ResponseEntity<CommonResponseDTO> getTestimonials(String search) {
         try {
-            List<Testimonial> testimonials = testimonialRepository.findAll();
+            List<Testimonial> testimonials = testimonialRepository.findAllWithSearch(search);
             List<TestimonialDto> list = new ArrayList<>();
             if (testimonials != null && !testimonials.isEmpty()) {
                 for (Testimonial testimonial: testimonials) {

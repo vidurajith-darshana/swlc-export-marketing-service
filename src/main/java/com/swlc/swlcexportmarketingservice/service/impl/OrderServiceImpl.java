@@ -678,10 +678,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<CommonResponseDTO> getAllOrdersByAdmin() {
+    public ResponseEntity<CommonResponseDTO> getAllOrdersByAdmin(String ref) {
         log.info("Execute getAllOrdersByAdmin: ");
         try {
-            List<Order> top10OrdersByYearAndMonth = orderRepository.findAll();
+            List<Order> top10OrdersByYearAndMonth = orderRepository.getAllOrdersWithRef(ref);
 
             List<FullOrderDTO> fullOrderDTOList =  new ArrayList<>();
 
