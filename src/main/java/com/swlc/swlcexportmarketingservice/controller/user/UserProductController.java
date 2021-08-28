@@ -1,16 +1,14 @@
 package com.swlc.swlcexportmarketingservice.controller.user;
 
 import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
+import com.swlc.swlcexportmarketingservice.dto.ProductRequestDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -62,5 +60,11 @@ public class UserProductController {
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allProducts));
 
+    }
+
+    @PostMapping("/request-details")
+    public ResponseEntity<CommonResponseDTO> requestProductDetails(@RequestBody ProductRequestDto productRequestDto) {
+
+        return productService.requestProductDetails(productRequestDto);
     }
 }

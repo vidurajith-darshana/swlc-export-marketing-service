@@ -16,7 +16,12 @@ import com.swlc.swlcexportmarketingservice.repository.ProductCategoryRepository;
 import com.swlc.swlcexportmarketingservice.repository.ProductRepository;
 import com.swlc.swlcexportmarketingservice.service.ProductService;
 import com.swlc.swlcexportmarketingservice.util.FileHandler;
+import com.swlc.swlcexportmarketingservice.util.HtmlToString;
+import com.swlc.swlcexportmarketingservice.util.MailSender;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -39,6 +44,15 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
     private final FileHandler fileHandler;
     private final ProductCategoryRepository productCategoryRepository;
+
+    @Autowired
+    private MailSender mailSender;
+
+    @Value("classpath:html-templates/product-request.html")
+    Resource productRequestHtml;
+
+    @Value("${admin.mail}")
+    private String adminMail;
 
     public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ModelMapper modelMapper, FileHandler fileHandler, ProductCategoryRepository productCategoryRepository) {
         this.productRepository = productRepository;
@@ -269,6 +283,25 @@ public class ProductServiceImpl implements ProductService {
             return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, top10ProductsDetails), HttpStatus.OK);
         } catch (Exception e) {
             throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<CommonResponseDTO> requestProductDetails(ProductRequestDto productRequestDto) {
+        try {
+
+            String html = new HtmlToString().convertHtmlToString(productRequestHtml.getFile().getPath());
+            html = html.replace("xProductCode",productRequestDto.getProductCode());
+            html = html.replace("xProductName",productRequestDto.getProductName());
+            html = html.replace("xCustomerName",productRequestDto.getCustomerName());
+            html = html.replace("xEmail",productRequestDto.getEmail());
+            html = html.replace("xDescription",productRequestDto.getDescription());
+
+            mailSender.sendEmail(adminMail,null, PRODUCT_REQUEST_EMAIL_SUBJECT, html, true, null);
+
+            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, "Request sent successfully!"), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CommonResponseDTO(false, APPLICATION_ERROR_OCCURRED_MESSAGE, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

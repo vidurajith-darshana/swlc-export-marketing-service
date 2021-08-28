@@ -1,6 +1,8 @@
 package com.swlc.swlcexportmarketingservice.service;
 
 import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
+import com.swlc.swlcexportmarketingservice.dto.ProductRequestDto;
+import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.enums.ProductStatus;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,8 @@ public interface ProductService {
     void updateProductCurrentQty(int productId, int currentQty);
 
     Page<ProductDTO> getAllProductsByCategoryId(int id, Pageable pageable);
+
+    ResponseEntity<CommonResponseDTO> requestProductDetails(ProductRequestDto productRequestDto);
 
     ResponseEntity<CommonResponseDTO> getAllTopProducts(int yr, int mth);
 }
