@@ -3,6 +3,7 @@ package com.swlc.swlcexportmarketingservice.controller.user;
 import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
 import com.swlc.swlcexportmarketingservice.dto.ProductRequestDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
+import com.swlc.swlcexportmarketingservice.dto.response.ProductUserResponseDTO;
 import com.swlc.swlcexportmarketingservice.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -32,7 +33,7 @@ public class UserProductController {
 
         log.info("Page : {}",pageable);
 
-        Page<ProductDTO> allProducts = productService.getAllProducts(pageable);
+        Page<ProductUserResponseDTO> allProducts = productService.getAllProducts(pageable);
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allProducts));
 

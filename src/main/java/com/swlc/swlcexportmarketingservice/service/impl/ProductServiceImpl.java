@@ -4,25 +4,25 @@ import com.swlc.swlcexportmarketingservice.dto.CategoryDTO;
 import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
 import com.swlc.swlcexportmarketingservice.dto.ProductRequestDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
+import com.swlc.swlcexportmarketingservice.dto.response.ProductUserResponseDTO;
 import com.swlc.swlcexportmarketingservice.dto.response.Top10ProductsResponseDTO;
 import com.swlc.swlcexportmarketingservice.dto.row_data.Top10ProductsRowDataDTO;
-import com.swlc.swlcexportmarketingservice.entity.Category;
-import com.swlc.swlcexportmarketingservice.entity.Product;
-import com.swlc.swlcexportmarketingservice.entity.ProductCategory;
+import com.swlc.swlcexportmarketingservice.entity.*;
 import com.swlc.swlcexportmarketingservice.enums.CategoryStatus;
 import com.swlc.swlcexportmarketingservice.enums.ProductStatus;
 import com.swlc.swlcexportmarketingservice.exception.SwlcExportMarketException;
 import com.swlc.swlcexportmarketingservice.repository.CategoryRepository;
 import com.swlc.swlcexportmarketingservice.repository.ProductCategoryRepository;
 import com.swlc.swlcexportmarketingservice.repository.ProductRepository;
+import com.swlc.swlcexportmarketingservice.repository.ProductReviewRepository;
 import com.swlc.swlcexportmarketingservice.service.ProductService;
 import com.swlc.swlcexportmarketingservice.util.FileHandler;
 import com.swlc.swlcexportmarketingservice.util.HtmlToString;
 import com.swlc.swlcexportmarketingservice.util.MailSender;
+import com.swlc.swlcexportmarketingservice.util.TokenValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -31,10 +31,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static com.swlc.swlcexportmarketingservice.constant.ApplicationConstant.*;
 
@@ -46,6 +44,8 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
     private final FileHandler fileHandler;
     private final ProductCategoryRepository productCategoryRepository;
+    private final TokenValidator tokenValidator;
+    private final ProductReviewRepository productReviewRepository;
 
     @Autowired
     private MailSender mailSender;
@@ -56,19 +56,21 @@ public class ProductServiceImpl implements ProductService {
     @Value("${admin.mail}")
     private String adminMail;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ModelMapper modelMapper, FileHandler fileHandler, ProductCategoryRepository productCategoryRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ModelMapper modelMapper, FileHandler fileHandler, ProductCategoryRepository productCategoryRepository, TokenValidator tokenValidator, ProductReviewRepository productReviewRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.modelMapper = modelMapper;
         this.fileHandler = fileHandler;
         this.productCategoryRepository = productCategoryRepository;
+        this.tokenValidator = tokenValidator;
+        this.productReviewRepository = productReviewRepository;
     }
 
 
     @Override
-    public Page<ProductDTO> getAllProducts(Pageable pageable) {
+    public Page<ProductUserResponseDTO> getAllProducts(Pageable pageable) {
 //        return productRepository.getAllProducts(pageable).map(this::getProductDTO);
-        return productRepository.getAllActiveProducts(CategoryStatus.ACTIVE, ProductStatus.ACTIVE, pageable).map(this::getProductDTO);
+        return productRepository.getAllActiveProducts(CategoryStatus.ACTIVE, ProductStatus.ACTIVE, pageable).map(this::getProductDTOForRegisterdUser);
     }
 
     @Override
@@ -242,6 +244,36 @@ public class ProductServiceImpl implements ProductService {
 
     ProductDTO getProductDTO(Product product) {
         ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+
+        List<ProductCategory> productCategories = productCategoryRepository.findByFkProduct(product);
+
+        List<CategoryDTO> categoryDTOS = new ArrayList<>();
+
+        for (ProductCategory pc : productCategories) {
+            categoryDTOS.add(modelMapper.map(pc.getFkCategory(), CategoryDTO.class));
+        }
+
+        productDTO.setCategories(categoryDTOS);
+
+        return productDTO;
+    }
+
+    ProductUserResponseDTO getProductDTOForRegisterdUser(Product product) {
+        ProductUserResponseDTO productDTO = modelMapper.map(product, ProductUserResponseDTO.class);
+
+        User user = tokenValidator.retrieveUserInformationFromAuthentication();
+
+        boolean isLoggedUser = false;
+        boolean isUserLiked = false;
+        int productReviewCount = productReviewRepository.calProductLikeCount(product);
+        if(user==null) {
+            isLoggedUser = true;
+            Optional<ProductReviews> productReviewsByUserAndProduct = productReviewRepository.getProductReviewsByUserAndProduct(user.getId(), product.getId());
+            isUserLiked = productReviewsByUserAndProduct.isPresent();
+        }
+        productDTO.setLoggedUser(isLoggedUser);
+        productDTO.setUserLiked(isUserLiked);
+        productDTO.setLikeCount(productReviewCount);
 
         List<ProductCategory> productCategories = productCategoryRepository.findByFkProduct(product);
 

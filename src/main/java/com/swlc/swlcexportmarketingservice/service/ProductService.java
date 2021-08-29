@@ -4,6 +4,7 @@ import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
 import com.swlc.swlcexportmarketingservice.dto.ProductRequestDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
+import com.swlc.swlcexportmarketingservice.dto.response.ProductUserResponseDTO;
 import com.swlc.swlcexportmarketingservice.enums.ProductStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ import java.util.List;
 @Service
 public interface ProductService {
 
-    Page<ProductDTO> getAllProducts(Pageable pageable);
+    Page<ProductUserResponseDTO> getAllProducts(Pageable pageable);
 
     List<ProductDTO> getAllActiveProducts();
 
