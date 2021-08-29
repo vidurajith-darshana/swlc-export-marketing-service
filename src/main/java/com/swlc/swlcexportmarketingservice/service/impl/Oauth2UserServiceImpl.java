@@ -270,7 +270,7 @@ public class Oauth2UserServiceImpl implements UserDetailsService, Oauth2UserServ
 
     @Override
     public ResponseEntity<CommonResponseDTO> updateOperator(UserDto dto) {
-        log.info("Execute getAllOperator: ");
+        log.info("Execute updateOperator: ");
         try {
             Optional<User> userOptional = userRepository.findByIdAndRole(dto.getId(), "ROLE_OPERATOR");
             if(!userOptional.isPresent()) throw new SwlcExportMarketException(404,"Operator not found");
@@ -281,9 +281,10 @@ public class Oauth2UserServiceImpl implements UserDetailsService, Oauth2UserServ
             if(dto.getPassword()!=null&&dto.getPassword().equals("")) {
                 user.setPassword(passwordEncoder.encode(dto.getPassword()));
             }
+            userRepository.save(user);
             return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, "Operator updated successfully!"), HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Execute getAllOperator: " + e.getMessage(), e);
+            log.error("Execute updateOperator: " + e.getMessage(), e);
             throw e;
         }
     }
