@@ -27,6 +27,12 @@ public class ProductReviews {
     @Column(name = "CREATED_DATE")
     private Date date;
 
+    public ProductReviews(User user, Product product, Date date) {
+        this.user = user;
+        this.product = product;
+        this.date = date;
+    }
+
     public long getId() {
         return id;
     }

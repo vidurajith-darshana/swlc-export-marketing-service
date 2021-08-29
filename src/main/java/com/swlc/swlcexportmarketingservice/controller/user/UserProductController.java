@@ -68,4 +68,9 @@ public class UserProductController {
 
         return productService.requestProductDetails(productRequestDto);
     }
+
+    @PatchMapping("/like")
+    public ResponseEntity<CommonResponseDTO> likeToProduct(@RequestParam("product") int id) {
+        return productService.likeProduct(id);
+    }
 }

@@ -35,4 +35,7 @@ public interface ProductService {
     ResponseEntity<CommonResponseDTO> requestProductDetails(ProductRequestDto productRequestDto);
 
     ResponseEntity<CommonResponseDTO> getAllTopProducts(int yr, int mth);
+
+    ResponseEntity<CommonResponseDTO> likeProduct(int productId);
+
 }

@@ -20,6 +20,7 @@ import com.swlc.swlcexportmarketingservice.util.FileHandler;
 import com.swlc.swlcexportmarketingservice.util.HtmlToString;
 import com.swlc.swlcexportmarketingservice.util.MailSender;
 import com.swlc.swlcexportmarketingservice.util.TokenValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,11 +32,13 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import static com.swlc.swlcexportmarketingservice.constant.ApplicationConstant.*;
 
+@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -266,9 +269,9 @@ public class ProductServiceImpl implements ProductService {
         boolean isLoggedUser = false;
         boolean isUserLiked = false;
         int productReviewCount = productReviewRepository.calProductLikeCount(product);
-        if(user==null) {
+        if(user!=null) {
             isLoggedUser = true;
-            Optional<ProductReviews> productReviewsByUserAndProduct = productReviewRepository.getProductReviewsByUserAndProduct(user.getId(), product.getId());
+            Optional<ProductReviews> productReviewsByUserAndProduct = productReviewRepository.getProductReviewsByUserAndProduct(user, product);
             isUserLiked = productReviewsByUserAndProduct.isPresent();
         }
         productDTO.setLoggedUser(isLoggedUser);
@@ -336,6 +339,29 @@ public class ProductServiceImpl implements ProductService {
             }
             return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, top10ProductsDetails), HttpStatus.OK);
         } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<CommonResponseDTO> likeProduct(int productId) {
+        log.info("Execute method likeProduct");
+        try {
+            User user = tokenValidator.retrieveUserInformationFromAuthentication();
+            if(user==null) throw new SwlcExportMarketException(404, "Unable to proceed the action. Invalid user");
+            Optional<Product> optionalProduct = productRepository.findById(productId);
+            if(!optionalProduct.isPresent()) throw new SwlcExportMarketException(404, "Product not found");
+            Optional<ProductReviews> productReviewsByUserAndProduct = productReviewRepository.getProductReviewsByUserAndProduct(user, optionalProduct.get());
+            boolean isLike = false;
+            if(productReviewsByUserAndProduct.isPresent()){
+                productReviewRepository.delete(productReviewsByUserAndProduct.get());
+            } else {
+                isLike = true;
+                productReviewRepository.save(new ProductReviews(user, optionalProduct.get(), new Date()));
+            }
+            return new ResponseEntity<>(new CommonResponseDTO(true, isLike?"Liked successfully!":"Disliked successfully!", null), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Execute method likeProduct: " + e.getMessage());
             throw e;
         }
     }
