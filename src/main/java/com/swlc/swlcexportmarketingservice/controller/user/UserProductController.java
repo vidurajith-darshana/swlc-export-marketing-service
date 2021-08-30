@@ -4,6 +4,7 @@ import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
 import com.swlc.swlcexportmarketingservice.dto.ProductRequestDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.dto.response.ProductUserResponseDTO;
+import com.swlc.swlcexportmarketingservice.enums.ProductReviewStatus;
 import com.swlc.swlcexportmarketingservice.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -70,7 +71,7 @@ public class UserProductController {
     }
 
     @PatchMapping("/like")
-    public ResponseEntity<CommonResponseDTO> likeToProduct(@RequestParam("product") int id) {
-        return productService.likeProduct(id);
+    public ResponseEntity<CommonResponseDTO> likeToProduct(@RequestParam("product") int id, @RequestParam("like") ProductReviewStatus status) {
+        return productService.likeProduct(id, status);
     }
 }

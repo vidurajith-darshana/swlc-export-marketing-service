@@ -9,6 +9,7 @@ import com.swlc.swlcexportmarketingservice.dto.response.Top10ProductsResponseDTO
 import com.swlc.swlcexportmarketingservice.dto.row_data.Top10ProductsRowDataDTO;
 import com.swlc.swlcexportmarketingservice.entity.*;
 import com.swlc.swlcexportmarketingservice.enums.CategoryStatus;
+import com.swlc.swlcexportmarketingservice.enums.ProductReviewStatus;
 import com.swlc.swlcexportmarketingservice.enums.ProductStatus;
 import com.swlc.swlcexportmarketingservice.exception.SwlcExportMarketException;
 import com.swlc.swlcexportmarketingservice.repository.CategoryRepository;
@@ -344,7 +345,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<CommonResponseDTO> likeProduct(int productId) {
+    public ResponseEntity<CommonResponseDTO> likeProduct(int productId,  ProductReviewStatus status) {
         log.info("Execute method likeProduct");
         try {
             User user = tokenValidator.retrieveUserInformationFromAuthentication();
@@ -354,10 +355,16 @@ public class ProductServiceImpl implements ProductService {
             Optional<ProductReviews> productReviewsByUserAndProduct = productReviewRepository.getProductReviewsByUserAndProduct(user, optionalProduct.get());
             boolean isLike = false;
             if(productReviewsByUserAndProduct.isPresent()){
-                productReviewRepository.delete(productReviewsByUserAndProduct.get());
+                ProductReviews productReviews = productReviewsByUserAndProduct.get();
+                if(productReviews.getStatus() != null) {
+                    productReviews.setStatus(status);
+                    productReviewRepository.save(productReviews);
+                } else {
+                    productReviewRepository.delete(productReviews);
+                }
             } else {
                 isLike = true;
-                productReviewRepository.save(new ProductReviews(user, optionalProduct.get(), new Date()));
+                productReviewRepository.save(new ProductReviews(user, optionalProduct.get(), new Date(), status));
             }
             return new ResponseEntity<>(new CommonResponseDTO(true, isLike?"Liked successfully!":"Disliked successfully!", null), HttpStatus.OK);
         } catch (Exception e) {

@@ -2,14 +2,15 @@ package com.swlc.swlcexportmarketingservice.controller.user;
 
 import com.swlc.swlcexportmarketingservice.dto.PromotionDTO;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
+import com.swlc.swlcexportmarketingservice.dto.response.PromotionUserResponseDTO;
+import com.swlc.swlcexportmarketingservice.entity.Promotion;
+import com.swlc.swlcexportmarketingservice.enums.PromotionStatus;
 import com.swlc.swlcexportmarketingservice.service.PromotionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,9 +32,21 @@ public class UserPromotionController {
 
         log.info("Page : {}",pageable);
 
-        Page<PromotionDTO> allPromotions = promotionService.getAllPromotions(pageable);
+        Page<PromotionUserResponseDTO> allPromotions = promotionService.getAllPromotions(pageable);
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allPromotions));
 
+    }
+
+    @PatchMapping("/like")
+    public ResponseEntity<CommonResponseDTO> likeToPromotion(@RequestParam("promotion") int id, @RequestParam("status")PromotionStatus promotionStatus) {
+        promotionService.likePromotion(id, promotionStatus);
+        return ResponseEntity.ok(new CommonResponseDTO(true, "Your action proceed successfully!"));
+    }
+
+    @PatchMapping("/comment")
+    public ResponseEntity<CommonResponseDTO> likeToPromotion(@RequestParam("promotion") int id, @RequestParam("comment") String comment) {
+        promotionService.commentOnPromotion(id, comment);
+        return ResponseEntity.ok(new CommonResponseDTO(true, "Your comment posted successfully!"));
     }
 }

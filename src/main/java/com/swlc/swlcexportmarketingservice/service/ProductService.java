@@ -5,6 +5,7 @@ import com.swlc.swlcexportmarketingservice.dto.ProductRequestDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.dto.response.ProductUserResponseDTO;
+import com.swlc.swlcexportmarketingservice.enums.ProductReviewStatus;
 import com.swlc.swlcexportmarketingservice.enums.ProductStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,6 @@ public interface ProductService {
 
     ResponseEntity<CommonResponseDTO> getAllTopProducts(int yr, int mth);
 
-    ResponseEntity<CommonResponseDTO> likeProduct(int productId);
+    ResponseEntity<CommonResponseDTO> likeProduct(int productId, ProductReviewStatus status);
 
 }

@@ -1,5 +1,6 @@
 package com.swlc.swlcexportmarketingservice.entity;
 
+import com.swlc.swlcexportmarketingservice.enums.ProductReviewStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,11 +27,14 @@ public class ProductReviews {
     private Product product;
     @Column(name = "CREATED_DATE")
     private Date date;
+    @Enumerated(EnumType.STRING)
+    private ProductReviewStatus status;
 
-    public ProductReviews(User user, Product product, Date date) {
+    public ProductReviews(User user, Product product, Date date, ProductReviewStatus status) {
         this.user = user;
         this.product = product;
         this.date = date;
+        this.status = status;
     }
 
     public long getId() {
@@ -65,6 +69,14 @@ public class ProductReviews {
         this.date = date;
     }
 
+    public ProductReviewStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductReviewStatus status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "ProductReviews{" +
@@ -72,6 +84,7 @@ public class ProductReviews {
                 ", user=" + user +
                 ", product=" + product +
                 ", date=" + date +
+                ", status=" + status +
                 '}';
     }
 }

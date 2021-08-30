@@ -3,6 +3,7 @@ package com.swlc.swlcexportmarketingservice.controller.admin;
 import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
 import com.swlc.swlcexportmarketingservice.dto.PromotionDTO;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
+import com.swlc.swlcexportmarketingservice.dto.response.PromotionUserResponseDTO;
 import com.swlc.swlcexportmarketingservice.enums.PromotionStatus;
 import com.swlc.swlcexportmarketingservice.service.PromotionService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class AdminPromotionController {
 
         log.info("Page : {}",pageable);
 
-        Page<PromotionDTO> allPromotions = promotionService.getAllPromotions(pageable);
+        Page<PromotionUserResponseDTO> allPromotions = promotionService.getAllPromotions(pageable);
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allPromotions));
 

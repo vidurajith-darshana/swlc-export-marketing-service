@@ -1,22 +1,20 @@
 package com.swlc.swlcexportmarketingservice.entity;
 
-
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+import java.util.Date;
 
+/**
+ * @author hp
+ */
 @Entity
 @NoArgsConstructor
-@Getter
-@Setter
 @Data
-@Table(name = "PROMOTION", uniqueConstraints = {@UniqueConstraint(columnNames = {"FK_USER", "FK_PROMOTION"})})
-public class UserPromotion {
-
+@Table(name = "USER_PROMOTION_COMMENT")
+public class UserPromotionComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -30,13 +28,18 @@ public class UserPromotion {
     @JoinColumn(name = "FK_PROMOTION")
     private Promotion fkPromotion;
 
-    @NotNull
-    @Column(name = "LIKE_STATUS")
-    private Integer likeStatus;
+    @Column(name="CREATED_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created_date;
 
-    public UserPromotion(User fkUser, Promotion fkPromotion, @NotNull Integer likeStatus) {
+    @NotNull
+    @Column(name = "COMMENT")
+    private String comment;
+
+    public UserPromotionComment(User fkUser, Promotion fkPromotion, Date created_date, @NotNull String comment) {
         this.fkUser = fkUser;
         this.fkPromotion = fkPromotion;
-        this.likeStatus = likeStatus;
+        this.created_date = created_date;
+        this.comment = comment;
     }
 }
