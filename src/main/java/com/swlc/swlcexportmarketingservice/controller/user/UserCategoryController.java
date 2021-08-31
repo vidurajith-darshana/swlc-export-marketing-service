@@ -8,10 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,6 +34,13 @@ public class UserCategoryController {
         Page<CategoryDTO> allCategory = categoryService.getAllCategory(pageable);
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allCategory));
+
+    }
+
+    @PostMapping("/status/update/{categoryId}/{status}")
+    public ResponseEntity<CommonResponseDTO> updateCategoryStatus(@PathVariable("categoryId") int categoryId,@PathVariable("status") int status) {
+
+        return categoryService.updateCategoryStatus(categoryId,status);
 
     }
 }

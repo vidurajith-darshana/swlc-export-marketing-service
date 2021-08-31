@@ -169,6 +169,10 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = modelMapper.map(productDTO, Product.class);
 
+        if (productDTO.getStatus() != null) {
+            product.setStatus(productDTO.getStatus());
+        }
+
         product = productRepository.save(product);
 
         List<ProductCategory> productCategories = productCategoryRepository.findByFkProduct(product);

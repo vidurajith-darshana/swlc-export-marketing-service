@@ -43,6 +43,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/api/v1/user/customer/reset-password").permitAll()
                 .antMatchers("/swlc-data/**").permitAll()
 
+                .antMatchers("/api/v1/user/category/status/update/{categoryId}/{status}").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
                 .antMatchers("/api/v1/user/operator/create").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_ADMIN.toString())
                 .antMatchers("/api/v1/user/customer/save/delivery-details").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_CUSTOMER.toString())
                 .antMatchers("/api/v1/user/customer/update").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_CUSTOMER.toString())

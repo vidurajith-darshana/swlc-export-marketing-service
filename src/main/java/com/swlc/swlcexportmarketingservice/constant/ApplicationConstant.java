@@ -10,6 +10,7 @@ public class ApplicationConstant {
     public static final String NOT_FOUND_PROMOTION = "Promotion not found!";
     public static final String NOT_FOUND_TESTIMONIAL = "Testimonial not found!";
     public static final String NOT_FOUND_VIDEO = "Video not found!";
+    public static final String CATEGORY_EXISTS = "Category already exists!";
 
     //Success Messages
     public static final String REQUEST_SUCCESS_MESSAGE = "Your request was success.";
