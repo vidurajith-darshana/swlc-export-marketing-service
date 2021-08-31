@@ -4,6 +4,7 @@ import com.swlc.swlcexportmarketingservice.dto.PromotionDTO;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
 import com.swlc.swlcexportmarketingservice.dto.response.PromotionUserResponseDTO;
 import com.swlc.swlcexportmarketingservice.entity.Promotion;
+import com.swlc.swlcexportmarketingservice.enums.PromotionLikeStatus;
 import com.swlc.swlcexportmarketingservice.enums.PromotionStatus;
 import com.swlc.swlcexportmarketingservice.service.PromotionService;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class UserPromotionController {
     }
 
     @PatchMapping("/like")
-    public ResponseEntity<CommonResponseDTO> likeToPromotion(@RequestParam("promotion") int id, @RequestParam("status")PromotionStatus promotionStatus) {
+    public ResponseEntity<CommonResponseDTO> likeToPromotion(@RequestParam("promotion") int id, @RequestParam("status") PromotionLikeStatus promotionStatus) {
         promotionService.likePromotion(id, promotionStatus);
         return ResponseEntity.ok(new CommonResponseDTO(true, "Your action proceed successfully!"));
     }

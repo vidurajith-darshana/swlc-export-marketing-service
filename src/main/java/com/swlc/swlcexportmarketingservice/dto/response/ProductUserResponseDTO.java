@@ -28,6 +28,7 @@ public class ProductUserResponseDTO {
     private Date createDate;
     private List<CategoryDTO> categories;
     private int likeCount;
+    private int dislikeCount;
     private boolean LoggedUser;
     private boolean isUserLiked;
 }

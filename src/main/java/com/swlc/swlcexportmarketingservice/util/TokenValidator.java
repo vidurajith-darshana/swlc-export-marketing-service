@@ -37,7 +37,8 @@ public class TokenValidator {
                 if (userByEmail == null) throw new SwlcExportMarketException(404, "Invalid user request");
                 return userByEmail;
             }
-            throw new SwlcExportMarketException(404, "Invalid user request2");
+//            throw new SwlcExportMarketException(404, "Invalid user request2");
+            return null;
         } catch (Exception e) {
             log.error("Method retrieveUserInformationFromAuthentication : " + e.getMessage());
             throw e;

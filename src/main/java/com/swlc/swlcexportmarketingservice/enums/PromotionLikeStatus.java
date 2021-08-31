@@ -3,6 +3,6 @@ package com.swlc.swlcexportmarketingservice.enums;
 /**
  * @author hp
  */
-public enum  ProductReviewStatus {
+public enum PromotionLikeStatus {
     LIKE, DISLIKE, REMOVE
 }

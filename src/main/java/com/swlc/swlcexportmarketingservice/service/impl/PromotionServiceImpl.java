@@ -7,6 +7,7 @@ import com.swlc.swlcexportmarketingservice.entity.Promotion;
 import com.swlc.swlcexportmarketingservice.entity.User;
 import com.swlc.swlcexportmarketingservice.entity.UserPromotion;
 import com.swlc.swlcexportmarketingservice.entity.UserPromotionComment;
+import com.swlc.swlcexportmarketingservice.enums.PromotionLikeStatus;
 import com.swlc.swlcexportmarketingservice.enums.PromotionStatus;
 import com.swlc.swlcexportmarketingservice.exception.SwlcExportMarketException;
 import com.swlc.swlcexportmarketingservice.repository.PromotionRepository;
@@ -122,7 +123,7 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public void likePromotion(int promotionId, PromotionStatus promotionStatus) {
+    public void likePromotion(int promotionId, PromotionLikeStatus promotionStatus) {
         log.info("Execute method likePromotion");
         try {
 
@@ -136,7 +137,7 @@ public class PromotionServiceImpl implements PromotionService {
             Optional<UserPromotion> userPromotion = userPromotionRepository.checkLiked(user, promotion);
 
             switch (promotionStatus) {
-                case ACTIVE:
+                case LIKE:
                     if(userPromotion.isPresent()) {
                         UserPromotion userPromotion1 = userPromotion.get();
                         userPromotion1.setLikeStatus(1);
@@ -145,7 +146,7 @@ public class PromotionServiceImpl implements PromotionService {
                         userPromotionRepository.save(new UserPromotion(user, promotion, 1));
                     }
                     break;
-                case INACTIVE:
+                case DISLIKE:
                     if(userPromotion.isPresent()) {
                         UserPromotion userPromotion1 = userPromotion.get();
                         userPromotion1.setLikeStatus(0);

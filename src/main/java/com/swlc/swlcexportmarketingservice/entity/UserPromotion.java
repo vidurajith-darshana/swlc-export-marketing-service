@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Data
-@Table(name = "PROMOTION", uniqueConstraints = {@UniqueConstraint(columnNames = {"FK_USER", "FK_PROMOTION"})})
+@Table(name = "USER_PROMOTION", uniqueConstraints = {@UniqueConstraint(columnNames = {"FK_USER", "FK_PROMOTION"})})
 public class UserPromotion {
 
     @Id

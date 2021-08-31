@@ -269,7 +269,8 @@ public class ProductServiceImpl implements ProductService {
 
         boolean isLoggedUser = false;
         boolean isUserLiked = false;
-        int productReviewCount = productReviewRepository.calProductLikeCount(product);
+        int productLikeReviewCount = productReviewRepository.calProductLikeCount(product, ProductReviewStatus.LIKE);
+        int productDislikeReviewCount = productReviewRepository.calProductLikeCount(product, ProductReviewStatus.DISLIKE);
         if(user!=null) {
             isLoggedUser = true;
             Optional<ProductReviews> productReviewsByUserAndProduct = productReviewRepository.getProductReviewsByUserAndProduct(user, product);
@@ -277,7 +278,8 @@ public class ProductServiceImpl implements ProductService {
         }
         productDTO.setLoggedUser(isLoggedUser);
         productDTO.setUserLiked(isUserLiked);
-        productDTO.setLikeCount(productReviewCount);
+        productDTO.setLikeCount(productLikeReviewCount);
+        productDTO.setDislikeCount(productDislikeReviewCount);
 
         List<ProductCategory> productCategories = productCategoryRepository.findByFkProduct(product);
 
@@ -350,23 +352,48 @@ public class ProductServiceImpl implements ProductService {
         try {
             User user = tokenValidator.retrieveUserInformationFromAuthentication();
             if(user==null) throw new SwlcExportMarketException(404, "Unable to proceed the action. Invalid user");
+
             Optional<Product> optionalProduct = productRepository.findById(productId);
             if(!optionalProduct.isPresent()) throw new SwlcExportMarketException(404, "Product not found");
+
             Optional<ProductReviews> productReviewsByUserAndProduct = productReviewRepository.getProductReviewsByUserAndProduct(user, optionalProduct.get());
+
             boolean isLike = false;
+
             if(productReviewsByUserAndProduct.isPresent()){
+
                 ProductReviews productReviews = productReviewsByUserAndProduct.get();
-                if(productReviews.getStatus() != null) {
-                    productReviews.setStatus(status);
-                    productReviewRepository.save(productReviews);
-                } else {
-                    productReviewRepository.delete(productReviews);
+
+                switch (status) {
+                    case LIKE:
+                        productReviews.setStatus(ProductReviewStatus.LIKE);
+                        productReviewRepository.save(productReviews);
+                        break;
+                    case DISLIKE:
+                        productReviews.setStatus(ProductReviewStatus.DISLIKE);
+                        productReviewRepository.save(productReviews);
+                        break;
+                    default:
+                        productReviewRepository.delete(productReviews);
+                        break;
                 }
+
             } else {
-                isLike = true;
-                productReviewRepository.save(new ProductReviews(user, optionalProduct.get(), new Date(), status));
+
+                switch (status) {
+                    case LIKE:
+                        productReviewRepository.save(new ProductReviews(user, optionalProduct.get(), new Date(), ProductReviewStatus.LIKE));
+                        break;
+                    case DISLIKE:
+                        productReviewRepository.save(new ProductReviews(user, optionalProduct.get(), new Date(), ProductReviewStatus.DISLIKE));
+                        break;
+                    default:
+                        throw new SwlcExportMarketException(404, "Unable to proceed the action.");
+
+                }
+
             }
-            return new ResponseEntity<>(new CommonResponseDTO(true, isLike?"Liked successfully!":"Disliked successfully!", null), HttpStatus.OK);
+            return new ResponseEntity<>(new CommonResponseDTO(true, "Your action proceed successfully!", null), HttpStatus.OK);
         } catch (Exception e) {
             log.error("Execute method likeProduct: " + e.getMessage());
             throw e;
