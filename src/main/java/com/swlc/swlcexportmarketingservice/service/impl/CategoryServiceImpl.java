@@ -74,8 +74,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<CategoryDTO> getAllCategoryByAdmin(Pageable pageable) {
-        return categoryRepository.getAllCategories(pageable).map(this::getCategoryDTO);
+    public Page<CategoryDTO> getAllCategoryByAdmin(String search, Pageable pageable) {
+        return categoryRepository.getAllCategoriesWithSearch(search, pageable).map(this::getCategoryDTO);
     }
 
     @Override

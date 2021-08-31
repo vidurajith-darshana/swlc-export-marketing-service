@@ -3,6 +3,8 @@ package com.swlc.swlcexportmarketingservice.controller.user;
 import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
 import com.swlc.swlcexportmarketingservice.dto.ProductRequestDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
+import com.swlc.swlcexportmarketingservice.dto.response.ProductUserResponseDTO;
+import com.swlc.swlcexportmarketingservice.enums.ProductReviewStatus;
 import com.swlc.swlcexportmarketingservice.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -31,7 +34,18 @@ public class UserProductController {
 
         log.info("Page : {}",pageable);
 
-        Page<ProductDTO> allProducts = productService.getAllProducts(pageable);
+        Page<ProductUserResponseDTO> allProducts = productService.getAllProducts(pageable);
+
+        return ResponseEntity.ok(new CommonResponseDTO(true, allProducts));
+
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<CommonResponseDTO> getAllActiveProducts(HttpServletRequest httpServletRequest) {
+
+        log.info("End point: " + httpServletRequest.getPathInfo());
+
+        List<ProductDTO> allProducts = productService.getAllActiveProducts();
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allProducts));
 
@@ -54,5 +68,10 @@ public class UserProductController {
     public ResponseEntity<CommonResponseDTO> requestProductDetails(@RequestBody ProductRequestDto productRequestDto) {
 
         return productService.requestProductDetails(productRequestDto);
+    }
+
+    @PatchMapping("/like")
+    public ResponseEntity<CommonResponseDTO> likeToProduct(@RequestParam("product") int id, @RequestParam("like") ProductReviewStatus status) {
+        return productService.likeProduct(id, status);
     }
 }

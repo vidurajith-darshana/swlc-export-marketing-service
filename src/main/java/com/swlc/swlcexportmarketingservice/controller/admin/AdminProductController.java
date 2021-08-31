@@ -24,13 +24,13 @@ public class AdminProductController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<CommonResponseDTO> getAllProducts(Pageable pageable, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<CommonResponseDTO> getAllProducts(@RequestParam("search") String search, Pageable pageable, HttpServletRequest httpServletRequest) {
 
         log.info("End point: " + httpServletRequest.getPathInfo());
 
         log.info("Page : {}",pageable);
 
-        Page<ProductDTO> allProducts = productService.getAllProductsByAdmin(pageable);
+        Page<ProductDTO> allProducts = productService.getAllProductsByAdmin(search, pageable);
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allProducts));
 

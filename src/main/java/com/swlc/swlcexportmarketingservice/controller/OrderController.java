@@ -52,4 +52,9 @@ public class OrderController {
     public ResponseEntity<CommonResponseDTO> updateOrderStatus(@PathVariable("ref") String ref, @PathVariable("status") String status){
         return orderService.updateOrderStatus(ref,status);
     }
+
+    @GetMapping("/customer/{id}")
+    public ResponseEntity<CommonResponseDTO> getCustomerOrderById(@PathVariable("id") int id) {
+       return orderService.getAllCustomerOrdersById(id);
+    }
 }

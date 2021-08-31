@@ -4,23 +4,27 @@ import com.swlc.swlcexportmarketingservice.dto.CategoryDTO;
 import com.swlc.swlcexportmarketingservice.dto.ProductDTO;
 import com.swlc.swlcexportmarketingservice.dto.ProductRequestDto;
 import com.swlc.swlcexportmarketingservice.dto.common.CommonResponseDTO;
-import com.swlc.swlcexportmarketingservice.entity.Category;
-import com.swlc.swlcexportmarketingservice.entity.Product;
-import com.swlc.swlcexportmarketingservice.entity.ProductCategory;
+import com.swlc.swlcexportmarketingservice.dto.response.ProductUserResponseDTO;
+import com.swlc.swlcexportmarketingservice.dto.response.Top10ProductsResponseDTO;
+import com.swlc.swlcexportmarketingservice.dto.row_data.Top10ProductsRowDataDTO;
+import com.swlc.swlcexportmarketingservice.entity.*;
 import com.swlc.swlcexportmarketingservice.enums.CategoryStatus;
+import com.swlc.swlcexportmarketingservice.enums.ProductReviewStatus;
 import com.swlc.swlcexportmarketingservice.enums.ProductStatus;
 import com.swlc.swlcexportmarketingservice.exception.SwlcExportMarketException;
 import com.swlc.swlcexportmarketingservice.repository.CategoryRepository;
 import com.swlc.swlcexportmarketingservice.repository.ProductCategoryRepository;
 import com.swlc.swlcexportmarketingservice.repository.ProductRepository;
+import com.swlc.swlcexportmarketingservice.repository.ProductReviewRepository;
 import com.swlc.swlcexportmarketingservice.service.ProductService;
 import com.swlc.swlcexportmarketingservice.util.FileHandler;
 import com.swlc.swlcexportmarketingservice.util.HtmlToString;
 import com.swlc.swlcexportmarketingservice.util.MailSender;
+import com.swlc.swlcexportmarketingservice.util.TokenValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -29,12 +33,13 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static com.swlc.swlcexportmarketingservice.constant.ApplicationConstant.*;
 
+@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -43,6 +48,8 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
     private final FileHandler fileHandler;
     private final ProductCategoryRepository productCategoryRepository;
+    private final TokenValidator tokenValidator;
+    private final ProductReviewRepository productReviewRepository;
 
     @Autowired
     private MailSender mailSender;
@@ -53,24 +60,40 @@ public class ProductServiceImpl implements ProductService {
     @Value("${admin.mail}")
     private String adminMail;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ModelMapper modelMapper, FileHandler fileHandler, ProductCategoryRepository productCategoryRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ModelMapper modelMapper, FileHandler fileHandler, ProductCategoryRepository productCategoryRepository, TokenValidator tokenValidator, ProductReviewRepository productReviewRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.modelMapper = modelMapper;
         this.fileHandler = fileHandler;
         this.productCategoryRepository = productCategoryRepository;
+        this.tokenValidator = tokenValidator;
+        this.productReviewRepository = productReviewRepository;
     }
 
 
     @Override
-    public Page<ProductDTO> getAllProducts(Pageable pageable) {
+    public Page<ProductUserResponseDTO> getAllProducts(Pageable pageable) {
 //        return productRepository.getAllProducts(pageable).map(this::getProductDTO);
-        return productRepository.getAllActiveProducts(CategoryStatus.ACTIVE, ProductStatus.ACTIVE, pageable).map(this::getProductDTO);
+        return productRepository.getAllActiveProducts(CategoryStatus.ACTIVE, ProductStatus.ACTIVE, pageable).map(this::getProductDTOForRegisterdUser);
     }
 
     @Override
-    public Page<ProductDTO> getAllProductsByAdmin(Pageable pageable) {
-        return productRepository.getAllProducts(pageable).map(this::getProductDTO);
+    public List<ProductDTO> getAllActiveProducts() {
+        try {
+            List<Product> allActiveProducts = productRepository.getAllActiveProducts(CategoryStatus.ACTIVE, ProductStatus.ACTIVE);
+            List<ProductDTO> productDTOS = new ArrayList<>();
+            for (Product p :allActiveProducts) {
+                productDTOS.add(this.getProductDTO(p));
+            }
+            return productDTOS;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public Page<ProductDTO> getAllProductsByAdmin(String search, Pageable pageable) {
+        return productRepository.getAllProductsWithSearch(search, pageable).map(this::getProductDTO);
     }
 
     @Override
@@ -243,6 +266,38 @@ public class ProductServiceImpl implements ProductService {
         return productDTO;
     }
 
+    ProductUserResponseDTO getProductDTOForRegisterdUser(Product product) {
+        ProductUserResponseDTO productDTO = modelMapper.map(product, ProductUserResponseDTO.class);
+
+        User user = tokenValidator.retrieveUserInformationFromAuthentication();
+
+        boolean isLoggedUser = false;
+        boolean isUserLiked = false;
+        int productLikeReviewCount = productReviewRepository.calProductLikeCount(product, ProductReviewStatus.LIKE);
+        int productDislikeReviewCount = productReviewRepository.calProductLikeCount(product, ProductReviewStatus.DISLIKE);
+        if(user!=null) {
+            isLoggedUser = true;
+            Optional<ProductReviews> productReviewsByUserAndProduct = productReviewRepository.getProductReviewsByUserAndProduct(user, product);
+            isUserLiked = productReviewsByUserAndProduct.isPresent();
+        }
+        productDTO.setLoggedUser(isLoggedUser);
+        productDTO.setUserLiked(isUserLiked);
+        productDTO.setLikeCount(productLikeReviewCount);
+        productDTO.setDislikeCount(productDislikeReviewCount);
+
+        List<ProductCategory> productCategories = productCategoryRepository.findByFkProduct(product);
+
+        List<CategoryDTO> categoryDTOS = new ArrayList<>();
+
+        for (ProductCategory pc : productCategories) {
+            categoryDTOS.add(modelMapper.map(pc.getFkCategory(), CategoryDTO.class));
+        }
+
+        productDTO.setCategories(categoryDTOS);
+
+        return productDTO;
+    }
+
     @Override
     public Page<ProductDTO> getAllProductsByCategoryId(int id, Pageable pageable) {
         try {
@@ -275,4 +330,77 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public ResponseEntity<CommonResponseDTO> getAllTopProducts(int yr, int mth) {
+        try {
+            List<Top10ProductsResponseDTO> top10ProductsDetails = new ArrayList<>();
+            List<Top10ProductsRowDataDTO> top10ProductsByYearAndMonth = productRepository.getTop10ProductsByYearAndMonth(yr, mth);
+
+            System.out.println(top10ProductsByYearAndMonth.size());
+
+            for (Top10ProductsRowDataDTO p : top10ProductsByYearAndMonth) {
+                System.out.println("X: " + p.getQty());
+                Product product = productRepository.findProductById(p.getPid());
+                ProductDTO productDTO = this.getProductDTO(product);
+                top10ProductsDetails.add(new Top10ProductsResponseDTO(productDTO, p.getQty()));
+            }
+            return new ResponseEntity<>(new CommonResponseDTO(true, REQUEST_SUCCESS_MESSAGE, top10ProductsDetails), HttpStatus.OK);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<CommonResponseDTO> likeProduct(int productId,  ProductReviewStatus status) {
+        log.info("Execute method likeProduct");
+        try {
+            User user = tokenValidator.retrieveUserInformationFromAuthentication();
+            if(user==null) throw new SwlcExportMarketException(404, "Unable to proceed the action. Invalid user");
+
+            Optional<Product> optionalProduct = productRepository.findById(productId);
+            if(!optionalProduct.isPresent()) throw new SwlcExportMarketException(404, "Product not found");
+
+            Optional<ProductReviews> productReviewsByUserAndProduct = productReviewRepository.getProductReviewsByUserAndProduct(user, optionalProduct.get());
+
+            boolean isLike = false;
+
+            if(productReviewsByUserAndProduct.isPresent()){
+
+                ProductReviews productReviews = productReviewsByUserAndProduct.get();
+
+                switch (status) {
+                    case LIKE:
+                        productReviews.setStatus(ProductReviewStatus.LIKE);
+                        productReviewRepository.save(productReviews);
+                        break;
+                    case DISLIKE:
+                        productReviews.setStatus(ProductReviewStatus.DISLIKE);
+                        productReviewRepository.save(productReviews);
+                        break;
+                    default:
+                        productReviewRepository.delete(productReviews);
+                        break;
+                }
+
+            } else {
+
+                switch (status) {
+                    case LIKE:
+                        productReviewRepository.save(new ProductReviews(user, optionalProduct.get(), new Date(), ProductReviewStatus.LIKE));
+                        break;
+                    case DISLIKE:
+                        productReviewRepository.save(new ProductReviews(user, optionalProduct.get(), new Date(), ProductReviewStatus.DISLIKE));
+                        break;
+                    default:
+                        throw new SwlcExportMarketException(404, "Unable to proceed the action.");
+
+                }
+
+            }
+            return new ResponseEntity<>(new CommonResponseDTO(true, "Your action proceed successfully!", null), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Execute method likeProduct: " + e.getMessage());
+            throw e;
+        }
+    }
 }

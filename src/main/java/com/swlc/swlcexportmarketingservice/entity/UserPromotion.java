@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Data
-@Table(name = "PROMOTION")
+@Table(name = "USER_PROMOTION", uniqueConstraints = {@UniqueConstraint(columnNames = {"FK_USER", "FK_PROMOTION"})})
 public class UserPromotion {
 
     @Id
@@ -33,4 +33,10 @@ public class UserPromotion {
     @NotNull
     @Column(name = "LIKE_STATUS")
     private Integer likeStatus;
+
+    public UserPromotion(User fkUser, Promotion fkPromotion, @NotNull Integer likeStatus) {
+        this.fkUser = fkUser;
+        this.fkPromotion = fkPromotion;
+        this.likeStatus = likeStatus;
+    }
 }

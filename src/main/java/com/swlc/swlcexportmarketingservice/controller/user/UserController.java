@@ -38,6 +38,21 @@ public class UserController {
         }
     }
 
+    @PutMapping("/operator/update")
+    public ResponseEntity<CommonResponseDTO> updateOperator(@RequestBody UserDto dto) {
+        return oauth2UserService.updateOperator(dto);
+    }
+
+    @GetMapping("/operator/get-all")
+    public ResponseEntity<CommonResponseDTO> getAllOperator() {
+            return oauth2UserService.getAllOperator();
+    }
+
+    @DeleteMapping("/operator/remove")
+    public ResponseEntity<CommonResponseDTO> deleteOperator(@RequestParam int id) {
+        return oauth2UserService.deleteOperator(id);
+    }
+
     @GetMapping("/getDetails/{email:.+}")
     public ResponseEntity<CommonResponseDTO> getUser(@PathVariable("email") String email) {
         return oauth2UserService.getUser(email);
@@ -57,14 +72,14 @@ public class UserController {
         }
     }
 
-    @PostMapping("/operator/update")
-    public ResponseEntity<CommonResponseDTO> updateOperator(@RequestBody UserDto userDto) {
-        if (userDto.getRole().equals(ApplicationConstant.USER_ROLES.ROLE_OPERATOR.toString())) {
-            return oauth2UserService.updateUser(userDto);
-        } else {
-            return new ResponseEntity<>(new CommonResponseDTO(false, APPLICATION_ERROR_OCCURRED_MESSAGE, "This API valid only to update operators!"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @PostMapping("/operator/update")
+//    public ResponseEntity<CommonResponseDTO> updateOperator(@RequestBody UserDto userDto) {
+//        if (userDto.getRole().equals(ApplicationConstant.USER_ROLES.ROLE_OPERATOR.toString())) {
+//            return oauth2UserService.updateUser(userDto);
+//        } else {
+//            return new ResponseEntity<>(new CommonResponseDTO(false, APPLICATION_ERROR_OCCURRED_MESSAGE, "This API valid only to update operators!"), HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     @PostMapping("/customer/forget-password/{email:.+}")
     public ResponseEntity<CommonResponseDTO> forgetPassword(@PathVariable("email") String email) {

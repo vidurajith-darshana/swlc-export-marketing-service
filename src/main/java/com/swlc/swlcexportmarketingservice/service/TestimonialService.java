@@ -10,5 +10,5 @@ public interface TestimonialService {
 
     ResponseEntity<CommonResponseDTO> deleteTestimonial(int testimonialId);
 
-    ResponseEntity<CommonResponseDTO> getTestimonials();
+    ResponseEntity<CommonResponseDTO> getTestimonials(String search);
 }

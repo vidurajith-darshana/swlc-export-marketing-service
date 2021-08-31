@@ -14,4 +14,10 @@ public interface OrderService {
     ResponseEntity<CommonResponseDTO> updateOrderStatus(String orderRef, String status);
 
     ResponseEntity<CommonResponseDTO> updateOrder(CommonOrderDTO commonOrderDTO);
+
+    ResponseEntity<CommonResponseDTO> getAllTopOrders(int yr, int mth);
+
+    ResponseEntity<CommonResponseDTO> getAllCustomerOrdersById(int customerId);
+
+    ResponseEntity<CommonResponseDTO> getAllOrdersByAdmin(String ref);
 }
