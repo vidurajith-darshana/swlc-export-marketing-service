@@ -26,13 +26,13 @@ public class AdminPromotionController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<CommonResponseDTO> getAllPromotion(Pageable pageable, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<CommonResponseDTO> getAllPromotion(@RequestParam("search") String search, Pageable pageable, HttpServletRequest httpServletRequest) {
 
         log.info("End point: " + httpServletRequest.getPathInfo());
 
         log.info("Page : {}",pageable);
 
-        Page<PromotionUserResponseDTO> allPromotions = promotionService.getAllPromotions(pageable);
+        Page<PromotionUserResponseDTO> allPromotions = promotionService.getAllPromotions(search, pageable);
 
         return ResponseEntity.ok(new CommonResponseDTO(true, allPromotions));
 

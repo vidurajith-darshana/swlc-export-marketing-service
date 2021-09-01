@@ -96,8 +96,8 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public Page<PromotionUserResponseDTO> getAllPromotions(Pageable pageable) {
-        return promotionRepository.getAllPromotions(pageable).map(this::getPromotionUserDTO);
+    public Page<PromotionUserResponseDTO> getAllPromotions(String search, Pageable pageable) {
+        return promotionRepository.getAllPromotions(search, pageable).map(this::getPromotionUserDTO);
     }
 
     @Override
