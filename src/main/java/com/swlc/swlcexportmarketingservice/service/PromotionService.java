@@ -15,7 +15,7 @@ public interface PromotionService {
 
     PromotionDTO updatePromotion(PromotionDTO promotionDTO);
 
-    Page<PromotionUserResponseDTO> getAllPromotions(Pageable pageable);
+    Page<PromotionUserResponseDTO> getAllPromotions(String search, Pageable pageable);
 
     void deletePromotion(int promotionId);
 
