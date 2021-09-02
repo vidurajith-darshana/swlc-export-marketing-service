@@ -59,21 +59,21 @@ public class AdminPromotionController {
     }
 
     @DeleteMapping("/delete/{promotionId}")
-    public ResponseEntity<CommonResponseDTO> updatePrmotionStatus(@PathVariable(value = "promotionId") int promotionId, @RequestParam(value = "status") PromotionStatus status, HttpServletRequest httpServletRequest) {
-
-        log.info("End point: " + httpServletRequest.getPathInfo());
-
-        promotionService.updatePromotionStatus(promotionId,status);
-
-        return ResponseEntity.ok(new CommonResponseDTO(true, "Promotion status has been successfully updated!"));
-    }
-
-    @PutMapping("/update/{promotionId}/status")
-    public ResponseEntity<CommonResponseDTO> deleteCategory(@PathVariable(value = "promotionId") int promotionId, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<CommonResponseDTO> deletePromotion(@PathVariable(value = "promotionId") int promotionId, HttpServletRequest httpServletRequest) {
 
         log.info("End point: " + httpServletRequest.getPathInfo());
 
         promotionService.deletePromotion(promotionId);
+
+        return ResponseEntity.ok(new CommonResponseDTO(true, "Promotion deleted successfully!"));
+    }
+
+    @PutMapping("/update/{promotionId}/status")
+    public ResponseEntity<CommonResponseDTO> deleteCategory(@PathVariable(value = "promotionId") int promotionId, @RequestParam("status") PromotionStatus status, HttpServletRequest httpServletRequest) {
+
+        log.info("End point: " + httpServletRequest.getPathInfo());
+
+        promotionService.updatePromotionStatus(promotionId, status);
 
         return ResponseEntity.ok(new CommonResponseDTO(true, "Promotion has been successfully deleted!"));
     }

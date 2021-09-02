@@ -97,29 +97,49 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public Page<PromotionUserResponseDTO> getAllPromotions(String search, Pageable pageable) {
-        return promotionRepository.getAllPromotions(search, pageable).map(this::getPromotionUserDTO);
+        return promotionRepository.getAllPromotions(search, PromotionStatus.DELETED, pageable).map(this::getPromotionUserDTO);
     }
 
     @Override
     public void deletePromotion(int promotionId) {
-        Optional<Promotion> optionalPromotion = promotionRepository.findById(promotionId);
+        log.info("Execute method deletePromotion id : " + promotionId);
+        try {
 
-        if (!optionalPromotion.isPresent()) throw new SwlcExportMarketException(404,NOT_FOUND_PROMOTION);
+            Optional<Promotion> optionalPromotion = promotionRepository.findById(promotionId);
 
-        promotionRepository.deleteById(promotionId);
+            if (!optionalPromotion.isPresent()) throw new SwlcExportMarketException(404,NOT_FOUND_PROMOTION);
+
+            Promotion promotion = optionalPromotion.get();
+            promotion.setStatus(PromotionStatus.DELETED);
+
+            promotionRepository.save(promotion);
+
+        } catch (Exception e) {
+            log.error("Execute method deletePromotion: " + e.getMessage());
+            throw e;
+        }
     }
 
     @Override
     public void updatePromotionStatus(int promotionId, PromotionStatus status) {
-        Optional<Promotion> optionalPromotion = promotionRepository.findById(promotionId);
+        log.info("Execute method updatePromotionStatus");
+        try {
 
-        if (!optionalPromotion.isPresent()) throw new SwlcExportMarketException(404,NOT_FOUND_PROMOTION);
+            Optional<Promotion> optionalPromotion = promotionRepository.findById(promotionId);
 
-        Promotion promotion = optionalPromotion.get();
+            if (!optionalPromotion.isPresent()) throw new SwlcExportMarketException(404,NOT_FOUND_PROMOTION);
 
-        promotion.setStatus(status);
+            Promotion promotion = optionalPromotion.get();
 
-        promotionRepository.save(promotion);
+            promotion.setStatus(status);
+
+            promotionRepository.save(promotion);
+
+        } catch (Exception e) {
+            log.error("Execute method updatePromotionStatus: " + e.getMessage());
+            throw e;
+        }
+
     }
 
     @Override
