@@ -2,6 +2,7 @@ package com.swlc.swlcexportmarketingservice.config;
 
 import com.swlc.swlcexportmarketingservice.constant.ApplicationConstant;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -48,6 +49,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/api/v1/user/customer/save/delivery-details").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_CUSTOMER.toString())
                 .antMatchers("/api/v1/user/customer/update").hasAuthority(ApplicationConstant.USER_ROLES.ROLE_CUSTOMER.toString())
                 .antMatchers("/api/v1/user/operator/update").access("hasAnyRole('ROLE_OPERATOR','ROLE_ADMIN')")
+                .antMatchers(HttpMethod.POST,"/api/v1/user/customer/reviews").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/user/customer/reviews").access("hasAnyRole('ROLE_OPERATOR','ROLE_ADMIN')")
+
                 .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
         http.csrf().disable();
     }
