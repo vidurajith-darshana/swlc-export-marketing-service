@@ -51,6 +51,11 @@ public class FileHandler {
 
         try {
 
+            String[] split = byteString.split(",");
+            if(split.length>1) {
+                byteString = split[1];
+            }
+
             // converts Base64 image into a byte value
             byte[] imageInBytes = Base64.decodeBase64(byteString);
 

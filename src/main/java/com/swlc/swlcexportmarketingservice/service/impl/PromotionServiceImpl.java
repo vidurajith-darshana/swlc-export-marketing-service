@@ -84,12 +84,16 @@ public class PromotionServiceImpl implements PromotionService {
 
         if (!optionalPromotion.isPresent()) throw new SwlcExportMarketException(404,NOT_FOUND_PROMOTION);
 
+        Promotion promotion = optionalPromotion.get();
+
         if(promotionDTO.getImage() !=null){
-            promotionDTO.setImage(fileHandler.saveImageFile(promotionDTO.getImage()));
+            promotion.setImage(fileHandler.saveImageFile(promotionDTO.getImage()));
         }
 
-        Promotion promotion = modelMapper.map(promotionDTO, Promotion.class);
-
+        promotion.setHeading(promotionDTO.getHeading());
+        promotion.setStatus(promotionDTO.getStatus());
+        promotion.setDescription(promotionDTO.getDescription());
+        
         promotion = promotionRepository.save(promotion);
 
         return modelMapper.map(promotion,PromotionDTO.class);
